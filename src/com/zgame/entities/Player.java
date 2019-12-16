@@ -4,12 +4,13 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import com.zgame.main.Game;
+import com.zgame.world.Camera;
 
 public class Player extends Entity{
 	public boolean right, up, left, down;
 	public int rightDir = 0, leftDir = 1, upDir = 2, downDir = 3;
 	public int dir = rightDir;
-	public double speed = 0.7;
+	public double speed = 1.0;
 	
 	private int frames = 0, index;
 	private static final int MAX_FRAMES = 5, MAX_INDEX = 3;
@@ -69,17 +70,20 @@ public class Player extends Entity{
 				}
 			}
 		}
+		
+		Camera.x = this.getX() - (Game.WIDTH/2);
+		Camera.y = this.getY() - (Game.HEIGHT/2);
 	}
 	
 	public void render(Graphics g) {
 		if (dir == rightDir) {
-			g.drawImage(this.rightPlayer[this.index], (int)this.getX(), (int)this.getY(), null);
+			g.drawImage(this.rightPlayer[this.index], (int)this.getX() - Camera.x, (int)this.getY() - Camera.y, null);
 		} else if (dir == leftDir) {
-			g.drawImage(this.leftPlayer[this.index], (int)this.getX(), (int)this.getY(), null);
+			g.drawImage(this.leftPlayer[this.index], (int)this.getX() - Camera.x, (int)this.getY() - Camera.y, null);
 		} else if (dir == upDir) {
-			g.drawImage(this.upPlayer[this.index], (int)this.getX(), (int)this.getY(), null);
+			g.drawImage(this.upPlayer[this.index], (int)this.getX() - Camera.x, (int)this.getY() - Camera.y, null);
 		} else if (dir == downDir) {
-			g.drawImage(this.downPlayer[this.index], (int)this.getX(), (int)this.getY(), null);
+			g.drawImage(this.downPlayer[this.index], (int)this.getX() - Camera.x, (int)this.getY() - Camera.y, null);
 		}
 	}
 }

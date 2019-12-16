@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import com.zgame.main.Game;
+import com.zgame.world.Camera;
 
 public class Entity {
 	public static BufferedImage LIFEPACK = Game.spritesheet.getSprite(6*16, 0, 16, 16);
@@ -56,6 +57,6 @@ public class Entity {
 	}
 	
 	public void render(Graphics g) {
-		g.drawImage(this.sprite, (int)this.x, (int)this.y, null);
+		g.drawImage(this.sprite, (int)this.x - Camera.x, (int)this.y - Camera.y, null);
 	}
 }
