@@ -5,6 +5,7 @@ import java.awt.image.BufferedImage;
 
 import com.zgame.main.Game;
 import com.zgame.world.Camera;
+import com.zgame.world.World;
 
 public class Player extends Entity{
 	public boolean right, up, left, down;
@@ -71,8 +72,8 @@ public class Player extends Entity{
 			}
 		}
 		
-		Camera.x = this.getX() - (Game.WIDTH/2);
-		Camera.y = this.getY() - (Game.HEIGHT/2);
+		Camera.x = Camera.clamp((this.getX() - (Game.WIDTH/2)), 0, ((World.WIDTH*16) - Game.WIDTH));
+		Camera.y = Camera.clamp((this.getY() - (Game.HEIGHT/2)), 0, ((World.HEIGHT*16) - Game.HEIGHT));
 	}
 	
 	public void render(Graphics g) {
