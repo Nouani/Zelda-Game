@@ -23,7 +23,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	
 	public static final int WIDTH = 240;
 	public static final int HEIGHT = 160;
-	public static final int SCALE = 3;
+	public static final int SCALE = 5;
 	
 	private Thread thread;
 	private boolean isRunning;
