@@ -1,7 +1,11 @@
 package com.zgame.main;
 
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
 
 import javax.swing.JFrame;
 
@@ -15,8 +19,11 @@ public class Game extends Canvas implements Runnable{
 	private Thread thread;
 	private boolean isRunnable;
 	
+	private BufferedImage image;
+	
 	public Game() {
 		this.setPreferredSize(new Dimension(Game.WIDTH*Game.SCALE,Game.HEIGHT*Game.SCALE));
+		this.image = new BufferedImage(Game.WIDTH,Game.HEIGHT,BufferedImage.TYPE_INT_ARGB);
 		initFrame();
 	}
 	
@@ -45,7 +52,22 @@ public class Game extends Canvas implements Runnable{
 	}
 	
 	public void render() {
+		BufferStrategy bs = this.getBufferStrategy();
+		if (bs == null) { 
+			this.createBufferStrategy(3); 
+			return; 
+		} 
+		Graphics g = this.image.getGraphics(); 
 		
+		// limpando o fundo
+		g.setColor(new Color(0,0,0)); 
+		g.fillRect(0,0,WIDTH,HEIGHT);
+		
+		// renderizando
+		g.dispose(); // metodo de otimização
+		g = bs.getDrawGraphics(); 
+		g.drawImage(this.image, 0, 0, WIDTH*SCALE, HEIGHT*SCALE, null); 
+		bs.show();
 	}
 	
 	public static void main(String[] args) {
