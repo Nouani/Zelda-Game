@@ -4,8 +4,8 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 public class Entity {
-	protected int x;
-	protected int y;
+	protected double x;
+	protected double y;
 	
 	protected int width;
 	protected int height;
@@ -29,11 +29,11 @@ public class Entity {
 	}
 	
 	public int getX() {
-		return this.x;
+		return (int)this.x;
 	}
 	
 	public int getY() {
-		return this.y;
+		return (int)this.y;
 	}
 	
 	public int getWidth() {
@@ -49,6 +49,6 @@ public class Entity {
 	}
 	
 	public void render(Graphics g) {
-		g.drawImage(this.sprite, this.x, this.y, null);
+		g.drawImage(this.sprite, (int)this.x, (int)this.y, null);
 	}
 }
