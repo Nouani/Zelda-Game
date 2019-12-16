@@ -6,6 +6,10 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.zgame.entities.Enemy;
+import com.zgame.entities.Entity;
+import com.zgame.main.Game;
+
 public class World {
 	private Tile[] tiles;
 	public static int WIDTH, HEIGHT;
@@ -23,20 +27,29 @@ public class World {
 			for (int xx = 0; xx < map.getWidth(); xx++) {
 				for (int yy = 0; yy < map.getHeight(); yy++) {
 					int pixelAtual = pixels[xx + (yy*map.getWidth())];
+					
+					tiles[xx + (yy * World.WIDTH)] = new FloorTile(xx*16, yy*16, Tile.TILE_FLOOR);
 					if (pixelAtual == 0xFF000000) {
-						System.out.println("1");
 						tiles[xx + (yy * World.WIDTH)] = new FloorTile(xx*16, yy*16, Tile.TILE_FLOOR);
 					} 
 					else if (pixelAtual == 0xFFFFFFFF) {
 						tiles[xx + (yy * World.WIDTH)] = new WallTile(xx*16, yy*16, Tile.TILE_WALL);
 					} 
 					else if (pixelAtual == 0xFF0026FF) {
-						System.out.println("2");
-						tiles[xx + (yy * World.WIDTH)] = new FloorTile(xx*16, yy*16, Tile.TILE_FLOOR);
-					} 
-					else {
-						System.out.println("3");
-						tiles[xx + (yy * World.WIDTH)] = new FloorTile(xx*16, yy*16, Tile.TILE_FLOOR);
+						Game.player.setX(xx*16);
+						Game.player.setY(yy*16);
+					}
+					else if (pixelAtual == 0xFFFF0000) {
+						Game.entities.add(new Enemy(xx*16, yy*16, 16, 16, Entity.ENEMY));
+					}
+					else if (pixelAtual == 0xFFFF6A00) {
+						Game.entities.add(new Enemy(xx*16, yy*16, 16, 16, Entity.WEAPON));
+					}
+					else if (pixelAtual == 0xFFFF7F7F) {
+						Game.entities.add(new Enemy(xx*16, yy*16, 16, 16, Entity.LIFEPACK));
+					}
+					else if (pixelAtual == 0xFFFFD800) {
+						Game.entities.add(new Enemy(xx*16, yy*16, 16, 16, Entity.BULLET));
 					}
 				}
 			}

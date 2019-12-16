@@ -3,7 +3,14 @@ package com.zgame.entities;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+import com.zgame.main.Game;
+
 public class Entity {
+	public static BufferedImage LIFEPACK = Game.spritesheet.getSprite(6*16, 0, 16, 16);
+	public static BufferedImage WEAPON = Game.spritesheet.getSprite(7*16, 0, 16, 16);
+	public static BufferedImage BULLET = Game.spritesheet.getSprite(6*16, 16, 16, 16);
+	public static BufferedImage ENEMY = Game.spritesheet.getSprite(7*16, 16, 16, 16);
+	
 	protected double x;
 	protected double y;
 	

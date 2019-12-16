@@ -23,19 +23,19 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	
 	public static final int WIDTH = 240;
 	public static final int HEIGHT = 160;
-	public static final int SCALE = 5;
+	public static final int SCALE = 3;
 	
 	private Thread thread;
 	private boolean isRunning;
 	
 	private BufferedImage image;
 	
-	public List<Entity> entities;
+	public static List<Entity> entities;
 	public static Spritesheet spritesheet;
 	
 	public static World world;
 	
-	private Player player;
+	public static Player player;
 	
 	public Game() {
 		this.addKeyListener(this);
@@ -47,9 +47,9 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		this.image = new BufferedImage(Game.WIDTH,Game.HEIGHT,BufferedImage.TYPE_INT_ARGB);
 		this.entities = new ArrayList<Entity>();
 		this.spritesheet = new Spritesheet("/spritesheet.png");
-		this.world = new World("/map.png");
-		player = new Player(0,0,16,16,this.spritesheet.getSprite(32, 0, 16, 16));
+		this.player = new Player(0,0,16,16,this.spritesheet.getSprite(32, 0, 16, 16));
 		this.entities.add(player);
+		this.world = new World("/map.png");
 	}
 	
 	public void initFrame() {
