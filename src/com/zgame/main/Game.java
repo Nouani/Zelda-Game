@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 import com.zgame.entities.Entity;
 import com.zgame.entities.Player;
 import com.zgame.graficos.Spritesheet;
+import com.zgame.world.World;
 
 public class Game extends Canvas implements Runnable, KeyListener{
 	private JFrame frame;
@@ -32,6 +33,8 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	public List<Entity> entities;
 	public static Spritesheet spritesheet;
 	
+	public static World world;
+	
 	private Player player;
 	
 	public Game() {
@@ -40,10 +43,11 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		initFrame();
 		
 		// Inicializando objetos
+
 		this.image = new BufferedImage(Game.WIDTH,Game.HEIGHT,BufferedImage.TYPE_INT_ARGB);
 		this.entities = new ArrayList<Entity>();
 		this.spritesheet = new Spritesheet("/spritesheet.png");
-		
+		this.world = new World("/map.png");
 		player = new Player(0,0,16,16,this.spritesheet.getSprite(32, 0, 16, 16));
 		this.entities.add(player);
 	}
@@ -83,11 +87,12 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		Graphics g = this.image.getGraphics(); 
 		
 		// Limpando o fundo
-		g.setColor(new Color(0,255,0)); 
+		g.setColor(new Color(0,0,0)); 
 		g.fillRect(0,0,WIDTH,HEIGHT);
 		
 		// Renderização do jogo
 		// Graphics2D g2 = (Graphics2D)g;
+		world.render(g);
 		for (Entity e : this.entities) {
 			e.render(g);
 		}
