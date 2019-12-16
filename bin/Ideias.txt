@@ -1,0 +1,15 @@
+Objetivos:
+- Artes para o jogo / Sprites;
+- Pause, Game Over e Start Menu;
+- Sistema de animação para o player;
+- Controle do jogo pelo teclado;
+- Sistema para shooting;
+- Sistema para criação de mapa;
+- Sistema de vários niveis;
+- Inimigos do jogo;
+- Boss battle;
+- Coletar items;
+- Aumentar ataque/defesa de acordo com item;
+- Sistema de dano;
+- Sistema de salvamento/carregamento do jogo;
+- Audio e musica.
