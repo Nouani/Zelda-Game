@@ -6,25 +6,32 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 import javax.swing.JFrame;
+
+import com.zgame.entities.Entity;
 
 public class Game extends Canvas implements Runnable{
 	private JFrame frame;
 	
 	public static final int WIDTH = 240;
-	public static final int HEIGHT = 120;
+	public static final int HEIGHT = 160;
 	public static final int SCALE = 3;
 	
 	private Thread thread;
-	private boolean isRunnable;
+	private boolean isRunning;
 	
 	private BufferedImage image;
 	
+	public List<Entity> entities;
+	
 	public Game() {
 		this.setPreferredSize(new Dimension(Game.WIDTH*Game.SCALE,Game.HEIGHT*Game.SCALE));
-		this.image = new BufferedImage(Game.WIDTH,Game.HEIGHT,BufferedImage.TYPE_INT_ARGB);
 		initFrame();
+		
+		// Inicializando objetos
+		this.image = new BufferedImage(Game.WIDTH,Game.HEIGHT,BufferedImage.TYPE_INT_ARGB);
 	}
 	
 	public void initFrame() {
@@ -38,7 +45,7 @@ public class Game extends Canvas implements Runnable{
 	}
 	
 	public synchronized void start() {
-		this.isRunnable = true;
+		this.isRunning = true;
 		this.thread = new Thread(this);
 		thread.start();
 	}
@@ -88,7 +95,7 @@ public class Game extends Canvas implements Runnable{
 		int frames = 0;
 		double timer = System.currentTimeMillis();
 		
-		while (isRunnable) {
+		while (isRunning) {
 			double now = System.nanoTime();
 			delta += (now - lastTime) / ns;
 			lastTime = now;
