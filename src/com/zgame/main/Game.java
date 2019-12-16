@@ -6,11 +6,14 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFrame;
 
 import com.zgame.entities.Entity;
+import com.zgame.entities.Player;
+import com.zgame.graficos.Spritesheet;
 
 public class Game extends Canvas implements Runnable{
 	private JFrame frame;
@@ -25,6 +28,7 @@ public class Game extends Canvas implements Runnable{
 	private BufferedImage image;
 	
 	public List<Entity> entities;
+	public Spritesheet spritesheet;
 	
 	public Game() {
 		this.setPreferredSize(new Dimension(Game.WIDTH*Game.SCALE,Game.HEIGHT*Game.SCALE));
@@ -32,6 +36,11 @@ public class Game extends Canvas implements Runnable{
 		
 		// Inicializando objetos
 		this.image = new BufferedImage(Game.WIDTH,Game.HEIGHT,BufferedImage.TYPE_INT_ARGB);
+		this.entities = new ArrayList<Entity>();
+		this.spritesheet = new Spritesheet("/spritesheet.png");
+		
+		Player player = new Player(0,0,16,16,this.spritesheet.getSprite(32, 0, 16, 16));
+		this.entities.add(player);
 	}
 	
 	public void initFrame() {
@@ -55,7 +64,9 @@ public class Game extends Canvas implements Runnable{
 	}
 	
 	public void tick() {
-		
+		for (Entity e : this.entities) {
+			e.tick();
+		}
 	}
 	
 	public void render() {
@@ -72,6 +83,9 @@ public class Game extends Canvas implements Runnable{
 		
 		// Renderização do jogo
 		// Graphics2D g2 = (Graphics2D)g;
+		for (Entity e : this.entities) {
+			e.render(g);
+		}
 		
 		// Renderização do fFundo
 		g.dispose(); // metodo de otimização

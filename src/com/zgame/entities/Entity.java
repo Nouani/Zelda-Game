@@ -36,6 +36,10 @@ public class Entity {
 		return this.height;
 	}
 	
+	public void tick() {
+		
+	}
+	
 	public void render(Graphics g) {
 		g.drawImage(this.sprite, this.x, this.y, null);
 	}
