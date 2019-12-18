@@ -7,6 +7,7 @@ import com.zgame.main.Game;
 import com.zgame.world.Camera;
 
 public class Entity {
+	// declarações das sprites estaticas para melhor desempenho
 	public static BufferedImage LIFEPACK = Game.spritesheet.getSprite(6*16, 0, 16, 16);
 	public static BufferedImage WEAPON = Game.spritesheet.getSprite(7*16, 0, 16, 16);
 	public static BufferedImage BULLET = Game.spritesheet.getSprite(6*16, 16, 16, 16);

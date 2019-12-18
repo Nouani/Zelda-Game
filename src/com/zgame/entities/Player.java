@@ -8,14 +8,18 @@ import com.zgame.world.Camera;
 import com.zgame.world.World;
 
 public class Player extends Entity{
-	public boolean right, up, left, down;
-	public int rightDir = 0, leftDir = 1, upDir = 2, downDir = 3;
-	public int dir = rightDir;
-	public double speed = 1.0;
+	public boolean right, up, left, down; // para verificar se foi apertada
+	public int rightDir = 0, leftDir = 1, upDir = 2, downDir = 3; // codigo de cada tecla 
+	public int dir = rightDir; // codigo da tecla apertada no momento
+	public double speed = 1.0; // velocidade do jogador
 	
-	private int frames = 0, index;
-	private static final int MAX_FRAMES = 5, MAX_INDEX = 3;
+	private int frames = 0, // quantidade de vezes que está ocorrendo um movimento
+				index; // qual o indice da sprite a ser capturada no momento
+	private static final int MAX_FRAMES = 5, // quantidade máxima de vezes para troca de animacao
+							MAX_INDEX = 3; // quantidade de sprites pertencentes as animações de cada lado do jogador
 	private boolean moved = false;
+	
+	// sprite do jogador
 	private BufferedImage[] rightPlayer;
 	private BufferedImage[] leftPlayer;
 	private BufferedImage[] upPlayer;
@@ -24,12 +28,13 @@ public class Player extends Entity{
 	public Player(int x, int y, int widght, int height, BufferedImage sprite) {
 		super(x, y, widght, height, sprite);
 		
+		// inicializando os objetos
 		this.rightPlayer = new BufferedImage[4];
 		this.leftPlayer = new BufferedImage[4];
 		this.upPlayer = new BufferedImage[4];
 		this.downPlayer = new BufferedImage[4];
 		
-		for (int i = 0; i < rightPlayer.length; i++) {
+		for (int i = 0; i < rightPlayer.length; i++) { // adicionando dinamicamente todas as sprites
 			this.rightPlayer[i] = Game.spritesheet.getSprite(32+(16*i), 0, 16, 16);
 			this.leftPlayer[i] = Game.spritesheet.getSprite(32+(16*i), 16, 16, 16);
 			this.upPlayer[i] = Game.spritesheet.getSprite(32+(16*i), 32, 16, 16);
@@ -37,37 +42,37 @@ public class Player extends Entity{
 		}
 	}
 	
-	public void tick() {
-		moved = false;
-		if (right) {
-			moved = true;
-			dir = rightDir;
-			this.x += this.speed;
+	public void tick() { 
+		moved = false; // ainda não esta em movimento
+		if (right && World.isFree((int)(this.x + this.speed), this.getY())) { // se apertou tecla para direita
+			moved = true; // está em movimento
+			dir = rightDir; // codigo da tecla atual em movimento
+			this.x += this.speed; // movimenta o player
 		} 
-		else if (left) {
-			moved = true;
-			dir = leftDir;
-			this.x -= this.speed;
+		else if (left && World.isFree((int)(this.x - this.speed), this.getY())) { // se apertou tecla para esquerda
+			moved = true; // está em movimento
+			dir = leftDir; // codigo da tecla atual em movimento
+			this.x -= this.speed; // movimenta o player
 		}
 		
-		if (up) {
-			moved = true;
-			dir = upDir;
-			this.y -= this.speed;
+		if (up && World.isFree(this.getX(), (int)(this.y - this.speed))) { // se apertou tecla para cima
+			moved = true; // está em movimento
+			dir = upDir; // codigo da tecla atual em movimento
+			this.y -= this.speed; // movimenta o player
 		} 
-		else if (down) {
-			moved = true;
-			dir = downDir;
-			this.y += this.speed;
+		else if (down && World.isFree(this.getX(), (int)(this.y + this.speed))) { // se apertou tecla para baixo
+			moved = true; // está em movimento
+			dir = downDir; // codigo da tecla atual em movimento
+			this.y += this.speed; // movimenta o player
 		}
 		
-		if (moved) {
-			this.frames++;
-			if (this.frames == Player.MAX_FRAMES) {
-				this.frames = 0;
-				this.index++;
-				if (this.index > Player.MAX_INDEX) {
-					index = 0;
+		if (moved) { // se esta em movimento
+			this.frames++; // soma quantidade de vezes que esta em movimento
+			if (this.frames == Player.MAX_FRAMES) { // se a quantidade de vezes for igual a maxima para troca de sprite
+				this.frames = 0; // zera
+				this.index++; // soma indice do vetor de sprite para tal lado
+				if (this.index > Player.MAX_INDEX) { // se indice é maior que a quantidade total de sprites para animacao daquele lado
+					index = 0; // volta para primeira sprite
 				}
 			}
 		}
@@ -77,13 +82,13 @@ public class Player extends Entity{
 	}
 	
 	public void render(Graphics g) {
-		if (dir == rightDir) {
-			g.drawImage(this.rightPlayer[this.index], (int)this.getX() - Camera.x, (int)this.getY() - Camera.y, null);
-		} else if (dir == leftDir) {
+		if (dir == rightDir) { // verifica se o codigo é igual o de tecla para direita
+			g.drawImage(this.rightPlayer[this.index], (int)this.getX() - Camera.x, (int)this.getY() - Camera.y, null); // atualiza a posição do player
+		} else if (dir == leftDir) { 
 			g.drawImage(this.leftPlayer[this.index], (int)this.getX() - Camera.x, (int)this.getY() - Camera.y, null);
-		} else if (dir == upDir) {
-			g.drawImage(this.upPlayer[this.index], (int)this.getX() - Camera.x, (int)this.getY() - Camera.y, null);
-		} else if (dir == downDir) {
+		} else if (dir == upDir) { 
+			g.drawImage(this.upPlayer[this.index], (int)this.getX() - Camera.x, (int)this.getY() - Camera.y, null); 
+		} else if (dir == downDir) { 
 			g.drawImage(this.downPlayer[this.index], (int)this.getX() - Camera.x, (int)this.getY() - Camera.y, null);
 		}
 	}

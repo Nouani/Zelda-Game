@@ -43,7 +43,6 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		initFrame();
 		
 		// Inicializando objetos
-
 		this.image = new BufferedImage(Game.WIDTH,Game.HEIGHT,BufferedImage.TYPE_INT_ARGB);
 		this.entities = new ArrayList<Entity>();
 		this.spritesheet = new Spritesheet("/spritesheet.png");
@@ -63,9 +62,9 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	}
 	
 	public synchronized void start() {
-		this.isRunning = true;
-		this.thread = new Thread(this);
-		thread.start();
+		this.isRunning = true; 
+		this.thread = new Thread(this); // criando uma thread
+		thread.start(); // iniciando
 	}
 	
 	public synchronized void stop() {
@@ -79,7 +78,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	}
 	
 	public void render() {
-		BufferStrategy bs = this.getBufferStrategy();
+		BufferStrategy bs = this.getBufferStrategy(); // otimização
 		if (bs == null) { 
 			this.createBufferStrategy(3); 
 			return; 
@@ -124,13 +123,14 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			double now = System.nanoTime();
 			delta += (now - lastTime) / ns;
 			lastTime = now;
-			if (delta >= 1) {
-				tick();
-				render();
+			if (delta >= 1) { // se deu 1 segundo
+				tick(); // logica
+				render(); // renderização
 				frames++;
 				delta--;
 			}
 			
+			// verificação de fps
 			if (System.currentTimeMillis() - timer >= 1000) {
 				System.out.println("FPS: "+frames);
 				frames = 0;
@@ -141,9 +141,9 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e) {
+	public void keyPressed(KeyEvent e) { // ativar movimentação
 		int code = e.getKeyCode();
-		if (code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_D) {
+		if (code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_D) { 
 			this.player.right = true;
 		} else if (code == KeyEvent.VK_LEFT || code == KeyEvent.VK_A) {
 			this.player.left = true;
@@ -157,7 +157,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
+	public void keyReleased(KeyEvent e) { // desativa movimentação
 		int code = e.getKeyCode();
 		if (code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_D) {
 			this.player.right = false;
