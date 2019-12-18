@@ -50,7 +50,9 @@ public class World {
 						Game.player.setY(yy*16);
 					}
 					else if (pixelAtual == 0xFFFF0000) {
-						Game.entities.add(new Enemy(xx*16, yy*16, 16, 16, Entity.ENEMY));
+						Enemy e = new Enemy(xx*16, yy*16, 16, 16, Entity.ENEMY);
+						Game.entities.add(e);
+						Game.enemies.add(e);
 					}
 					else if (pixelAtual == 0xFFFF6A00) {
 						Game.entities.add(new Weapon(xx*16, yy*16, 16, 16, Entity.WEAPON));

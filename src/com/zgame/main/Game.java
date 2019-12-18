@@ -10,9 +10,11 @@ import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.JFrame;
 
+import com.zgame.entities.Enemy;
 import com.zgame.entities.Entity;
 import com.zgame.entities.Player;
 import com.zgame.graficos.Spritesheet;
@@ -31,11 +33,14 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	private BufferedImage image;
 	
 	public static List<Entity> entities;
+	public static List<Enemy> enemies;
 	public static Spritesheet spritesheet;
 	
 	public static World world;
 	
 	public static Player player;
+	
+	public static Random rand;
 	
 	public Game() {
 		this.addKeyListener(this);
@@ -43,12 +48,14 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		initFrame();
 		
 		// Inicializando objetos
+		Game.rand = new Random();
 		this.image = new BufferedImage(Game.WIDTH,Game.HEIGHT,BufferedImage.TYPE_INT_ARGB);
-		this.entities = new ArrayList<Entity>();
-		this.spritesheet = new Spritesheet("/spritesheet.png");
-		this.player = new Player(0,0,16,16,this.spritesheet.getSprite(32, 0, 16, 16));
-		this.entities.add(player);
-		this.world = new World("/map.png");
+		Game.entities = new ArrayList<Entity>();
+		Game.enemies = new ArrayList<Enemy>();
+		Game.spritesheet = new Spritesheet("/spritesheet.png");
+		Game.player = new Player(0,0,16,16,Game.spritesheet.getSprite(32, 0, 16, 16));
+		Game.entities.add(player);
+		Game.world = new World("/map.png");
 	}
 	
 	public void initFrame() {
@@ -72,7 +79,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	}
 	
 	public void tick() {
-		for (Entity e : this.entities) {
+		for (Entity e : Game.entities) {
 			e.tick();
 		}
 	}
@@ -92,7 +99,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		// Renderização do jogo
 		// Graphics2D g2 = (Graphics2D)g;
 		world.render(g);
-		for (Entity e : this.entities) {
+		for (Entity e : Game.entities) {
 			e.render(g);
 		}
 		
@@ -144,15 +151,15 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	public void keyPressed(KeyEvent e) { // ativar movimentação
 		int code = e.getKeyCode();
 		if (code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_D) { 
-			this.player.right = true;
+			Game.player.right = true;
 		} else if (code == KeyEvent.VK_LEFT || code == KeyEvent.VK_A) {
-			this.player.left = true;
+			Game.player.left = true;
 		}
 		
 		if (code == KeyEvent.VK_UP || code == KeyEvent.VK_W) {
-			this.player.up = true;
+			Game.player.up = true;
 		} else if (code == KeyEvent.VK_DOWN || code == KeyEvent.VK_S) {
-			this.player.down = true;
+			Game.player.down = true;
 		}
 	}
 
@@ -160,15 +167,15 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	public void keyReleased(KeyEvent e) { // desativa movimentação
 		int code = e.getKeyCode();
 		if (code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_D) {
-			this.player.right = false;
+			Game.player.right = false;
 		} else if (code == KeyEvent.VK_LEFT || code == KeyEvent.VK_A) {
-			this.player.left = false;
+			Game.player.left = false;
 		}
 		
 		if (code == KeyEvent.VK_UP || code == KeyEvent.VK_W) {
-			this.player.up = false;
+			Game.player.up = false;
 		} else if (code == KeyEvent.VK_DOWN || code == KeyEvent.VK_S) {
-			this.player.down = false;
+			Game.player.down = false;
 		}
 		
 	}
