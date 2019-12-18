@@ -11,7 +11,7 @@ public class Player extends Entity{
 	public boolean right, up, left, down; // para verificar se foi apertada
 	public int rightDir = 0, leftDir = 1, upDir = 2, downDir = 3; // codigo de cada tecla 
 	public int dir = rightDir; // codigo da tecla apertada no momento
-	public double speed = 1.0; // velocidade do jogador
+	public double speed = 1.5; // velocidade do jogador
 	
 	private int frames = 0, // quantidade de vezes que está ocorrendo um movimento
 				index; // qual o indice da sprite a ser capturada no momento

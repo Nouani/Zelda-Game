@@ -6,8 +6,11 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import com.zgame.entities.Bullet;
 import com.zgame.entities.Enemy;
 import com.zgame.entities.Entity;
+import com.zgame.entities.Lifepack;
+import com.zgame.entities.Weapon;
 import com.zgame.main.Game;
 
 public class World {
@@ -50,13 +53,13 @@ public class World {
 						Game.entities.add(new Enemy(xx*16, yy*16, 16, 16, Entity.ENEMY));
 					}
 					else if (pixelAtual == 0xFFFF6A00) {
-						Game.entities.add(new Enemy(xx*16, yy*16, 16, 16, Entity.WEAPON));
+						Game.entities.add(new Weapon(xx*16, yy*16, 16, 16, Entity.WEAPON));
 					}
 					else if (pixelAtual == 0xFFFF7F7F) {
-						Game.entities.add(new Enemy(xx*16, yy*16, 16, 16, Entity.LIFEPACK));
+						Game.entities.add(new Lifepack(xx*16, yy*16, 16, 16, Entity.LIFEPACK));
 					}
 					else if (pixelAtual == 0xFFFFD800) {
-						Game.entities.add(new Enemy(xx*16, yy*16, 16, 16, Entity.BULLET));
+						Game.entities.add(new Bullet(xx*16, yy*16, 16, 16, Entity.BULLET));
 					}
 				}
 			}
