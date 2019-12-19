@@ -24,6 +24,9 @@ public class Player extends Entity{
 	private BufferedImage[] leftPlayer;
 	private BufferedImage[] upPlayer;
 	private BufferedImage[] downPlayer;
+	
+	public static final int MAX_LIFE = 100;
+	public static double life = Player.MAX_LIFE;
 
 	public Player(int x, int y, int widght, int height, BufferedImage sprite) {
 		super(x, y, widght, height, sprite);

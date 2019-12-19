@@ -18,6 +18,7 @@ import com.zgame.entities.Enemy;
 import com.zgame.entities.Entity;
 import com.zgame.entities.Player;
 import com.zgame.graficos.Spritesheet;
+import com.zgame.graficos.UI;
 import com.zgame.world.World;
 
 public class Game extends Canvas implements Runnable, KeyListener{
@@ -42,6 +43,8 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	
 	public static Random rand;
 	
+	public UI ui;
+	
 	public Game() {
 		this.addKeyListener(this);
 		this.setPreferredSize(new Dimension(Game.WIDTH*Game.SCALE,Game.HEIGHT*Game.SCALE));
@@ -49,6 +52,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		
 		// Inicializando objetos
 		Game.rand = new Random();
+		this.ui = new UI();
 		this.image = new BufferedImage(Game.WIDTH,Game.HEIGHT,BufferedImage.TYPE_INT_ARGB);
 		Game.entities = new ArrayList<Entity>();
 		Game.enemies = new ArrayList<Enemy>();
@@ -98,10 +102,11 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		
 		// Renderização do jogo
 		// Graphics2D g2 = (Graphics2D)g;
-		world.render(g);
+		Game.world.render(g);
 		for (Entity e : Game.entities) {
 			e.render(g);
 		}
+		this.ui.render(g);
 		
 		// Renderização do fFundo
 		g.dispose(); // metodo de otimização

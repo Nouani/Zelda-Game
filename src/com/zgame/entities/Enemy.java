@@ -17,8 +17,8 @@ public class Enemy extends Entity{
 	
 	private int frames = 0, // quantidade de vezes que está ocorrendo um movimento
 			    index; // qual o indice da sprite a ser capturada no momento
-	private static final int MAX_FRAMES = 5, // quantidade máxima de vezes para troca de animacao
-							 MAX_INDEX = 1; // quantidade de sprites pertencentes a animacao
+	private int maxFrames = Game.rand.nextInt(20)+20; // quantidade máxima de vezes para troca de animacao
+	private static final int MAX_INDEX = 1;
 	
 	private BufferedImage[] spritesEnemy;
 
@@ -33,26 +33,43 @@ public class Enemy extends Entity{
 	
 	public void tick() {
 		if (Game.rand.nextInt(100) < 70) {
-			if (this.x < Game.player.getX() && World.isFree((int)(this.x + this.speed), this.getY()) && !this.isColliding((int)(this.x + this.speed), this.getY())) {
-				this.x += this.speed;
-			} else if (this.x > Game.player.getX() && World.isFree((int)(this.x - this.speed), this.getY()) && !this.isColliding((int)(this.x - this.speed), this.getY())) {
-				this.x -= this.speed;
-			}		
-			if (this.y < Game.player.getY() && World.isFree(this.getX(), (int)(this.y + this.speed)) && !this.isColliding(this.getX(), (int)(this.y + this.speed))) {
-				this.y += this.speed;
-			} else if (this.y > Game.player.getY() && World.isFree(this.getX(), (int)(this.y - this.speed)) && !this.isColliding(this.getX(), (int)(this.y - this.speed))) {
-				this.y -= this.speed;
+			if (!this.isCollidingWithPlayer()) {
+				if (this.x < Game.player.getX() && World.isFree((int)(this.x + this.speed), this.getY()) && !this.isColliding((int)(this.x + this.speed), this.getY())) {
+					this.x += this.speed;
+				} else if (this.x > Game.player.getX() && World.isFree((int)(this.x - this.speed), this.getY()) && !this.isColliding((int)(this.x - this.speed), this.getY())) {
+					this.x -= this.speed;
+				}		
+				if (this.y < Game.player.getY() && World.isFree(this.getX(), (int)(this.y + this.speed)) && !this.isColliding(this.getX(), (int)(this.y + this.speed))) {
+					this.y += this.speed;
+				} else if (this.y > Game.player.getY() && World.isFree(this.getX(), (int)(this.y - this.speed)) && !this.isColliding(this.getX(), (int)(this.y - this.speed))) {
+					this.y -= this.speed;
+				}
+			} else {
+				if (Game.rand.nextInt(100) < 10) {
+					Player.life -= Game.rand.nextInt(5);
+					if (Player.life <= 0) {
+						System.exit(1);
+					}
+					System.out.println(Player.life);
+				}
 			}
 		}
 
 		this.frames++; // soma quantidade de vezes que esta em movimento
-		if (this.frames == Enemy.MAX_FRAMES) { // se a quantidade de vezes for igual a maxima para troca de sprite
+		if (this.frames == this.maxFrames) { // se a quantidade de vezes for igual a maxima para troca de sprite
 			this.frames = 0; // zera
 			this.index++; // soma indice do vetor de sprite para tal lado
 			if (this.index > Enemy.MAX_INDEX) { // se indice é maior que a quantidade total de sprites para animacao
 				index = 0; // volta para primeira sprite
 			}
 		}
+	}
+	
+	public boolean isCollidingWithPlayer() {
+		Rectangle enemyCurrent = new Rectangle(this.getX() + this.maskX, this.getY()+ this.maskY, this.maskW, this.maskH);
+		Rectangle player = new Rectangle(Game.player.getX(), Game.player.getY(), Game.player.getWidth(), Game.player.getHeight());
+		
+		return enemyCurrent.intersects(player);
 	}
 	
 	public boolean isColliding(int xNext, int yNext) {
