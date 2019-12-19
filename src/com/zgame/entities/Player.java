@@ -16,7 +16,7 @@ public class Player extends Entity{
 	private int frames = 0, // quantidade de vezes que está ocorrendo um movimento
 				index; // qual o indice da sprite a ser capturada no momento
 	private static final int MAX_FRAMES = 5, // quantidade máxima de vezes para troca de animacao
-							MAX_INDEX = 3; // quantidade de sprites pertencentes as animações de cada lado do jogador
+							 MAX_INDEX = 3; // quantidade de sprites pertencentes as animações de cada lado do jogador
 	private boolean moved = false;
 	
 	// sprite do jogador
