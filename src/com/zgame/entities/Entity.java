@@ -1,6 +1,7 @@
 package com.zgame.entities;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 import com.zgame.main.Game;
@@ -21,12 +22,26 @@ public class Entity {
 	
 	private BufferedImage sprite;
 	
-	public Entity(int x, int y, int widght, int height, BufferedImage sprite) {
+	private int maskX, maskY, maskW, maskH;
+	
+	public Entity(int x, int y, int width, int height, BufferedImage sprite) {
 		this.x = x;
 		this.y = y;
-		this.width = widght;
+		this.width = width;
 		this.height = height;
 		this.sprite = sprite;
+		
+		this.maskX = 0;
+		this.maskY = 0;
+		this.maskW = width;
+		this.maskH = height;
+	}
+	
+	public void setMask(int maskX, int maskY, int maskW, int maskH) {
+		this.maskX = maskX;
+		this.maskY = maskY;
+		this.maskW = maskW;
+		this.maskH = maskH;
 	}
 	
 	public void setX(int x) {
@@ -57,7 +72,15 @@ public class Entity {
 		
 	}
 	
+	public static boolean isColliding(Entity e1, Entity e2) {
+		Rectangle rectE1 = new Rectangle(e1.getX() + e1.maskX, e1.getY() + e1.maskY, e1.maskW, e1.maskH);
+		Rectangle rectE2 = new Rectangle(e2.getX() + e2.maskX, e2.getY() + e2.maskY, e2.maskW, e2.maskH);
+		
+		return rectE1.intersects(rectE2);
+	}
+	
 	public void render(Graphics g) {
 		g.drawImage(this.sprite, (int)this.x - Camera.x, (int)this.y - Camera.y, null);
+		
 	}
 }
