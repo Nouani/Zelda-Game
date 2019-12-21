@@ -4,11 +4,15 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+import com.zgame.main.Game;
 import com.zgame.world.Camera;
 
 public class BulletShoot extends Entity{
 	private int dx, dy;
 	private double speed = 4;
+	
+	private int currentLife = 0;
+	private static final int MAX_LIFE = 10;
 
 	public BulletShoot(int x, int y, int width, int height, BufferedImage sprite, int dx, int dy) {
 		super(x, y, width, height, sprite);
@@ -19,6 +23,11 @@ public class BulletShoot extends Entity{
 	public void tick() {
 		this.x += this.dx*this.speed;
 		this.y += this.dy*this.speed;
+		this.currentLife++;
+		if (this.currentLife == BulletShoot.MAX_LIFE) {
+			//Game.bullets.remove(this);
+			return;
+		}
 	}
 	
 	public void render(Graphics g) {

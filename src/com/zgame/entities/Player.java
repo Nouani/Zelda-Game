@@ -31,7 +31,7 @@ public class Player extends Entity{
 	public static final int MAX_LIFE = 100;
 	public double life = Player.MAX_LIFE;
 
-	public int ammo = 0;
+	public int ammo = 5;
 	
 	private boolean hasGun = false;
 	
@@ -107,23 +107,29 @@ public class Player extends Entity{
 			}
 		}
 		
-		if (this.shoot && this.hasGun) {
+		if (this.shoot && this.hasGun && this.ammo > 0) {
+			if (this.hasGun) {
+				if (this.ammo > 0) {
+					this.ammo--;
+					this.shoot = false;
+					int dx = 0;
+					int px = 0;
+					if (this.dir == this.rightDir) {
+						dx = 1;
+						px = 13;
+					} else if (this.dir == this.leftDir){
+						dx = -1;
+						px = -1;
+					}
+					if (dx != 0) {
+						BulletShoot bullet = new BulletShoot(this.getX() + px , this.getY() + 8, 3, 3, null, dx, 0);
+						Game.bullets.add(bullet);
+					} else {
+						System.out.println("dsffs");
+					}
+				}
+			}
 			this.shoot = false;
-			int dx = 0;
-			int px = 0;
-			if (this.dir == this.rightDir) {
-				dx = 1;
-				px = 13;
-			} else if (this.dir == this.leftDir){
-				dx = -1;
-				px = -1;
-			}
-			if (dx != 0) {
-				BulletShoot bullet = new BulletShoot(this.getX() + px , this.getY() + 8, 3, 3, null, dx, 0);
-				Game.bullets.add(bullet);
-			} else {
-				System.out.println("dsffs");
-			}
 		}
 		
 		if (this.life <= 0) {
