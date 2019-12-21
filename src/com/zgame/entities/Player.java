@@ -25,11 +25,15 @@ public class Player extends Entity{
 	private BufferedImage[] leftPlayer;
 	private BufferedImage[] upPlayer;
 	private BufferedImage[] downPlayer;
+	private BufferedImage playerDamage;
 	
 	public static final int MAX_LIFE = 100;
 	public static double life = Player.MAX_LIFE;
 	
-	public static int ammo = 0;
+	public boolean isDamaged = false;
+	private int damageFrames = 0;
+	
+	public int ammo = 0;
 
 	public Player(int x, int y, int widght, int height, BufferedImage sprite) {
 		super(x, y, widght, height, sprite);
@@ -39,6 +43,7 @@ public class Player extends Entity{
 		this.leftPlayer = new BufferedImage[4];
 		this.upPlayer = new BufferedImage[4];
 		this.downPlayer = new BufferedImage[4];
+		this.playerDamage = Game.spritesheet.getSprite(0, 16, 16, 16);
 		
 		for (int i = 0; i < rightPlayer.length; i++) { // adicionando dinamicamente todas as sprites
 			this.rightPlayer[i] = Game.spritesheet.getSprite(32+(16*i), 0, 16, 16);
@@ -82,8 +87,17 @@ public class Player extends Entity{
 				}
 			}
 		}
+		
 		this.checkCollisionLifePack();
 		this.checkCollisionAmmo();
+		
+		if (this.isDamaged) {
+			this.damageFrames++;
+			if (this.damageFrames == 10) {
+				this.damageFrames = 0;
+				this.isDamaged = false;
+			}
+		}
 		
 		Camera.x = Camera.clamp((this.getX() - (Game.WIDTH/2)), 0, ((World.WIDTH*16) - Game.WIDTH));
 		Camera.y = Camera.clamp((this.getY() - (Game.HEIGHT/2)), 0, ((World.HEIGHT*16) - Game.HEIGHT));
@@ -96,7 +110,7 @@ public class Player extends Entity{
 			if(atual instanceof Bullet) {
 				if(Entity.isColliding(this, atual))
 				{
-					Player.ammo+=5;
+					this.ammo+=5;
 					//Game.entities.remove(atual);
 				}
 			}
@@ -121,14 +135,18 @@ public class Player extends Entity{
 	}
 	
 	public void render(Graphics g) {
-		if (dir == rightDir) { // verifica se o codigo é igual o de tecla para direita
-			g.drawImage(this.rightPlayer[this.index], (int)this.getX() - Camera.x, (int)this.getY() - Camera.y, null); // atualiza a posição do player
-		} else if (dir == leftDir) { 
-			g.drawImage(this.leftPlayer[this.index], (int)this.getX() - Camera.x, (int)this.getY() - Camera.y, null);
-		} else if (dir == upDir) { 
-			g.drawImage(this.upPlayer[this.index], (int)this.getX() - Camera.x, (int)this.getY() - Camera.y, null); 
-		} else if (dir == downDir) { 
-			g.drawImage(this.downPlayer[this.index], (int)this.getX() - Camera.x, (int)this.getY() - Camera.y, null);
+		if (!this.isDamaged) {
+			if (dir == rightDir) { // verifica se o codigo é igual o de tecla para direita
+				g.drawImage(this.rightPlayer[this.index], this.getX() - Camera.x, this.getY() - Camera.y, null); // atualiza a posição do player
+			} else if (dir == leftDir) { 
+				g.drawImage(this.leftPlayer[this.index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+			} else if (dir == upDir) { 
+				g.drawImage(this.upPlayer[this.index], this.getX() - Camera.x, this.getY() - Camera.y, null); 
+			} else if (dir == downDir) { 
+				g.drawImage(this.downPlayer[this.index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+			}
+		} else {
+			g.drawImage(this.playerDamage, this.getX() - Camera.x, this.getY() - Camera.y, null);
 		}
 	}
 }
