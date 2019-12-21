@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import com.zgame.graficos.Spritesheet;
 import com.zgame.main.Game;
 import com.zgame.world.Camera;
 import com.zgame.world.World;
@@ -28,12 +29,16 @@ public class Player extends Entity{
 	private BufferedImage playerDamage;
 	
 	public static final int MAX_LIFE = 100;
-	public static double life = Player.MAX_LIFE;
+	public double life = Player.MAX_LIFE;
+
+	public int ammo = 0;
+	
+	private boolean hasGun = false;
 	
 	public boolean isDamaged = false;
 	private int damageFrames = 0;
 	
-	public int ammo = 0;
+	private String ultimaDirecao = "frente";
 
 	public Player(int x, int y, int widght, int height, BufferedImage sprite) {
 		super(x, y, widght, height, sprite);
@@ -90,6 +95,7 @@ public class Player extends Entity{
 		
 		this.checkCollisionLifePack();
 		this.checkCollisionAmmo();
+		this.checkCollisionGun();
 		
 		if (this.isDamaged) {
 			this.damageFrames++;
@@ -99,8 +105,32 @@ public class Player extends Entity{
 			}
 		}
 		
+		if (this.life <= 0) {
+			Game.entities = new ArrayList<Entity>();
+			Game.enemies = new ArrayList<Enemy>();
+			Game.spritesheet = new Spritesheet("/spritesheet.png");
+			Game.player = new Player(0,0,16,16,Game.spritesheet.getSprite(32, 0, 16, 16));
+			Game.entities.add(Game.player);
+			Game.world = new World("/map.png");
+			return;
+		}
+		
 		Camera.x = Camera.clamp((this.getX() - (Game.WIDTH/2)), 0, ((World.WIDTH*16) - Game.WIDTH));
 		Camera.y = Camera.clamp((this.getY() - (Game.HEIGHT/2)), 0, ((World.HEIGHT*16) - Game.HEIGHT));
+	}
+	
+	public void checkCollisionGun() {
+		for(int i = 0; i < Game.entities.size(); i++)
+		{
+			Entity atual = Game.entities.get(i);
+			if(atual instanceof Weapon) {
+				if(Entity.isColliding(this, atual))
+				{
+					this.hasGun = true;
+					//Game.entities.remove(atual);
+				}
+			}
+		}
 	}
 	
 	public void checkCollisionAmmo() {
@@ -110,7 +140,7 @@ public class Player extends Entity{
 			if(atual instanceof Bullet) {
 				if(Entity.isColliding(this, atual))
 				{
-					this.ammo+=5;
+					this.ammo+=10;
 					//Game.entities.remove(atual);
 				}
 			}
@@ -124,10 +154,10 @@ public class Player extends Entity{
 			if(atual instanceof Lifepack) {
 				if(Entity.isColliding(this, atual))
 				{
-					Player.life += 10;
+					this.life += 10;
 				
-					if(Player.life > 100)
-						Player.life = 100;
+					if(this.life > 100)
+						this.life = 100;
 					//Game.entities.remove(atual);
 				}
 			}
@@ -138,12 +168,43 @@ public class Player extends Entity{
 		if (!this.isDamaged) {
 			if (dir == rightDir) { // verifica se o codigo é igual o de tecla para direita
 				g.drawImage(this.rightPlayer[this.index], this.getX() - Camera.x, this.getY() - Camera.y, null); // atualiza a posição do player
-			} else if (dir == leftDir) { 
+				if (this.hasGun) {
+					g.drawImage(Entity.GUN_RIGHT, this.getX() + 2 - Camera.x, this.getY() + 1 - Camera.y, null);
+					this.ultimaDirecao = "right";
+				}
+			} else if (dir == leftDir) {
 				g.drawImage(this.leftPlayer[this.index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+				if (this.hasGun) {
+					g.drawImage(Entity.GUN_LEFT, this.getX() - 2 - Camera.x, this.getY() + 2 - Camera.y, null);
+					this.ultimaDirecao = "left";
+				}
 			} else if (dir == upDir) { 
+				if (this.hasGun) {
+					BufferedImage gun = null;
+					System.out.println(this.ultimaDirecao);
+					if (this.ultimaDirecao == "right" || this.ultimaDirecao == "downRight" || this.ultimaDirecao == "upLeft") {
+						gun = Entity.GUN_LEFT;
+						this.ultimaDirecao = "upLeft";
+					} else if (this.ultimaDirecao == "left" || this.ultimaDirecao == "downLeft" || this.ultimaDirecao == "upRight"){
+						gun = Entity.GUN_RIGHT;
+						this.ultimaDirecao = "upRight";
+					}
+					g.drawImage(gun, this.getX() - Camera.x, this.getY() + 1 - Camera.y, null);
+				}
 				g.drawImage(this.upPlayer[this.index], this.getX() - Camera.x, this.getY() - Camera.y, null); 
 			} else if (dir == downDir) { 
 				g.drawImage(this.downPlayer[this.index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+				if (this.hasGun) {
+					BufferedImage gun = null;
+					if (this.ultimaDirecao == "upRight" || this.ultimaDirecao == "right" || this.ultimaDirecao == "downLeft") {
+						gun = Entity.GUN_LEFT;
+						this.ultimaDirecao = "downLeft";
+					} else if (this.ultimaDirecao == "upLeft" || this.ultimaDirecao == "left" || this.ultimaDirecao == "downRight"){
+						gun = Entity.GUN_RIGHT;
+						this.ultimaDirecao = "downRight";
+					} 
+					g.drawImage(gun, this.getX() - Camera.x, this.getY() + 1 - Camera.y, null);
+				}
 			}
 		} else {
 			g.drawImage(this.playerDamage, this.getX() - Camera.x, this.getY() - Camera.y, null);
