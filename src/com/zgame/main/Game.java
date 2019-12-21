@@ -7,6 +7,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -21,9 +23,10 @@ import com.zgame.entities.Entity;
 import com.zgame.entities.Player;
 import com.zgame.graficos.Spritesheet;
 import com.zgame.graficos.UI;
+import com.zgame.world.Camera;
 import com.zgame.world.World;
 
-public class Game extends Canvas implements Runnable, KeyListener{
+public class Game extends Canvas implements Runnable, KeyListener, MouseListener{
 	private JFrame frame;
 	
 	public static final int WIDTH = 240;
@@ -50,6 +53,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	
 	public Game() {
 		this.addKeyListener(this);
+		this.addMouseListener(this);
 		this.setPreferredSize(new Dimension(Game.WIDTH*Game.SCALE,Game.HEIGHT*Game.SCALE));
 		initFrame();
 		
@@ -197,12 +201,46 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		}
 		
 		if (code == KeyEvent.VK_SPACE) {
-			Game.player.shoot = true;
+			Game.player.keyShoot = true;
 		}
 	}
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		int code = e.getButton();
+		if (code == MouseEvent.BUTTON1) {
+			Game.player.mouseShoot = true;
+			Game.player.mx = e.getX() / 3;
+			Game.player.my = e.getY() / 3;
+		}
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}

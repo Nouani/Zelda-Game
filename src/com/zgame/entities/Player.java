@@ -31,14 +31,16 @@ public class Player extends Entity{
 	public static final int MAX_LIFE = 100;
 	public double life = Player.MAX_LIFE;
 
-	public int ammo = 5;
+	public int ammo = 0;
 	
 	private boolean hasGun = false;
 	
 	public boolean isDamaged = false;
 	private int damageFrames = 0;
 	
-	public boolean shoot = false;
+	public boolean keyShoot = false,
+				   mouseShoot = false;
+	public int mx, my;
 	
 	private String ultimaDirecao = "frente";
 
@@ -107,29 +109,58 @@ public class Player extends Entity{
 			}
 		}
 		
-		if (this.shoot && this.hasGun && this.ammo > 0) {
+		if (this.keyShoot) {
+			this.keyShoot = false;
 			if (this.hasGun) {
 				if (this.ammo > 0) {
-					this.ammo--;
-					this.shoot = false;
-					int dx = 0;
-					int px = 0;
-					if (this.dir == this.rightDir) {
-						dx = 1;
-						px = 13;
-					} else if (this.dir == this.leftDir){
-						dx = -1;
-						px = -1;
-					}
-					if (dx != 0) {
+					if (this.dir == this.rightDir || this.dir == this.leftDir) {
+						this.ammo--;
+						int dx = 0;
+						int px = 0;
+						if (this.dir == this.rightDir) {
+							dx = 1;
+							px = 13;
+						} else if (this.dir == this.leftDir){
+							dx = -1;
+							px = -1;
+						}
 						BulletShoot bullet = new BulletShoot(this.getX() + px , this.getY() + 8, 3, 3, null, dx, 0);
 						Game.bullets.add(bullet);
 					} else {
-						System.out.println("dsffs");
+						System.out.println("BLOQUEADO!");
 					}
 				}
 			}
-			this.shoot = false;
+		}
+		
+		
+		
+		if (mouseShoot) {
+			this.mouseShoot = false;
+			if (this.hasGun) {
+				if (this.ammo > 0) {
+					if (this.dir == this.rightDir || this.dir == this.leftDir) {
+						this.ammo--;
+						
+						int px = 0;
+						if (this.dir == this.rightDir) {
+							px = 13;
+						} else if (this.dir == this.leftDir){
+							px = -1;
+						}
+						
+						double angle = Math.atan2(this.my - (this.getY() + 8 - Camera.y), this.mx - (this.getX() + px - Camera.x));
+						double dx = Math.cos(angle);
+						double dy = Math.sin(angle);
+
+						BulletShoot bullet = new BulletShoot(this.getX() + px , this.getY() + 8, 3, 3, null, dx, dy);
+						Game.bullets.add(bullet);
+					} else {
+						System.out.println("BLOQUEADO!");
+					}
+					
+				}
+			}
 		}
 		
 		if (this.life <= 0) {
