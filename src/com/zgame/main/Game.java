@@ -3,6 +3,7 @@ package com.zgame.main;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -111,7 +112,10 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		// Renderização do fFundo
 		g.dispose(); // metodo de otimização
 		g = bs.getDrawGraphics(); 
-		g.drawImage(this.image, 0, 0, WIDTH*SCALE, HEIGHT*SCALE, null); 
+		g.drawImage(this.image, 0, 0, WIDTH*SCALE, HEIGHT*SCALE, null);
+		g.setFont(new Font("Arial",Font.BOLD,20));
+		g.setColor(Color.WHITE);
+		g.drawString("Munição: "+Player.ammo, 600, 20);
 		bs.show();
 	}
 	

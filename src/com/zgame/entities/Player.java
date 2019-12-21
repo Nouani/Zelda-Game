@@ -2,6 +2,7 @@ package com.zgame.entities;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import com.zgame.main.Game;
 import com.zgame.world.Camera;
@@ -27,6 +28,8 @@ public class Player extends Entity{
 	
 	public static final int MAX_LIFE = 100;
 	public static double life = Player.MAX_LIFE;
+	
+	public static int ammo = 0;
 
 	public Player(int x, int y, int widght, int height, BufferedImage sprite) {
 		super(x, y, widght, height, sprite);
@@ -80,31 +83,41 @@ public class Player extends Entity{
 			}
 		}
 		this.checkCollisionLifePack();
+		this.checkCollisionAmmo();
 		
 		Camera.x = Camera.clamp((this.getX() - (Game.WIDTH/2)), 0, ((World.WIDTH*16) - Game.WIDTH));
 		Camera.y = Camera.clamp((this.getY() - (Game.HEIGHT/2)), 0, ((World.HEIGHT*16) - Game.HEIGHT));
 	}
 	
-	public void checkCollisionLifePack() {
-		for (Entity entity : Game.entities) {
-			if (entity instanceof Lifepack) {
-				if (Entity.isColliding(this, entity)) {
-					if (Player.life < Player.MAX_LIFE) {
-						Player.life += 5;
-						Game.entities.remove(entity);
-					}
+	public void checkCollisionAmmo() {
+		for(int i = 0; i < Game.entities.size(); i++)
+		{
+			Entity atual = Game.entities.get(i);
+			if(atual instanceof Bullet) {
+				if(Entity.isColliding(this, atual))
+				{
+					Player.ammo+=5;
+					//Game.entities.remove(atual);
 				}
 			}
 		}
-		/*for (int i = 0; i < Game.entities.size(); i++) {
+	}
+	
+	public void checkCollisionLifePack() {
+		for(int i = 0; i < Game.entities.size(); i++)
+		{
 			Entity atual = Game.entities.get(i);
-			if (atual instanceof Lifepack) {
-				if (Entity.isColliding(this, atual)) {
-					life += 5;
-					Game.entities.remove(atual);
+			if(atual instanceof Lifepack) {
+				if(Entity.isColliding(this, atual))
+				{
+					Player.life += 10;
+				
+					if(Player.life > 100)
+						Player.life = 100;
+					//Game.entities.remove(atual);
 				}
 			}
-		}*/
+		}
 	}
 	
 	public void render(Graphics g) {
