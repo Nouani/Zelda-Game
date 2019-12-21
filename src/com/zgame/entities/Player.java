@@ -38,6 +38,8 @@ public class Player extends Entity{
 	public boolean isDamaged = false;
 	private int damageFrames = 0;
 	
+	public boolean shoot = false;
+	
 	private String ultimaDirecao = "frente";
 
 	public Player(int x, int y, int widght, int height, BufferedImage sprite) {
@@ -105,9 +107,29 @@ public class Player extends Entity{
 			}
 		}
 		
+		if (this.shoot && this.hasGun) {
+			this.shoot = false;
+			int dx = 0;
+			int px = 0;
+			if (this.dir == this.rightDir) {
+				dx = 1;
+				px = 13;
+			} else if (this.dir == this.leftDir){
+				dx = -1;
+				px = -1;
+			}
+			if (dx != 0) {
+				BulletShoot bullet = new BulletShoot(this.getX() + px , this.getY() + 8, 3, 3, null, dx, 0);
+				Game.bullets.add(bullet);
+			} else {
+				System.out.println("dsffs");
+			}
+		}
+		
 		if (this.life <= 0) {
 			Game.entities = new ArrayList<Entity>();
 			Game.enemies = new ArrayList<Enemy>();
+			Game.bullets = new ArrayList<BulletShoot>();
 			Game.spritesheet = new Spritesheet("/spritesheet.png");
 			Game.player = new Player(0,0,16,16,Game.spritesheet.getSprite(32, 0, 16, 16));
 			Game.entities.add(Game.player);
@@ -181,7 +203,6 @@ public class Player extends Entity{
 			} else if (dir == upDir) { 
 				if (this.hasGun) {
 					BufferedImage gun = null;
-					System.out.println(this.ultimaDirecao);
 					if (this.ultimaDirecao == "right" || this.ultimaDirecao == "downRight" || this.ultimaDirecao == "upLeft") {
 						gun = Entity.GUN_LEFT;
 						this.ultimaDirecao = "upLeft";

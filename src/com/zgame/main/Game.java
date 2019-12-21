@@ -15,6 +15,7 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 
+import com.zgame.entities.BulletShoot;
 import com.zgame.entities.Enemy;
 import com.zgame.entities.Entity;
 import com.zgame.entities.Player;
@@ -36,6 +37,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 	
 	public static List<Entity> entities;
 	public static List<Enemy> enemies;
+	public static List<BulletShoot> bullets;
 	public static Spritesheet spritesheet;
 	
 	public static World world;
@@ -57,6 +59,7 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		this.image = new BufferedImage(Game.WIDTH,Game.HEIGHT,BufferedImage.TYPE_INT_ARGB);
 		Game.entities = new ArrayList<Entity>();
 		Game.enemies = new ArrayList<Enemy>();
+		Game.bullets = new ArrayList<BulletShoot>();
 		Game.spritesheet = new Spritesheet("/spritesheet.png");
 		Game.player = new Player(0,0,16,16,Game.spritesheet.getSprite(32, 0, 16, 16));
 		Game.entities.add(Game.player);
@@ -87,6 +90,9 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		for (Entity e : Game.entities) {
 			e.tick();
 		}
+		for (BulletShoot bullet : Game.bullets) {
+			bullet.tick();
+		}
 	}
 	
 	public void render() {
@@ -106,6 +112,9 @@ public class Game extends Canvas implements Runnable, KeyListener{
 		Game.world.render(g);
 		for (Entity e : Game.entities) {
 			e.render(g);
+		}
+		for (BulletShoot bullet : Game.bullets) {
+			bullet.render(g);
 		}
 		this.ui.render(g);
 		
@@ -187,6 +196,9 @@ public class Game extends Canvas implements Runnable, KeyListener{
 			Game.player.down = false;
 		}
 		
+		if (code == KeyEvent.VK_SPACE) {
+			Game.player.shoot = true;
+		}
 	}
 
 	@Override
