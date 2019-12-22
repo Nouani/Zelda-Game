@@ -21,6 +21,8 @@ public class Enemy extends Entity{
 	private static final int MAX_INDEX = 1;
 	
 	private BufferedImage[] spritesEnemy;
+	
+	private int life = 10;
 
 	public Enemy(int x, int y, int widght, int height, BufferedImage sprite) {
 		super(x, y, widght, height, sprite);
@@ -58,6 +60,26 @@ public class Enemy extends Entity{
 			this.index++; // soma indice do vetor de sprite para tal lado
 			if (this.index > Enemy.MAX_INDEX) { // se indice é maior que a quantidade total de sprites para animacao
 				index = 0; // volta para primeira sprite
+			}
+		}
+		
+		this.collidingBullet();
+		if (this.life == 0) {
+			this.destroySelf();
+			return;
+		}
+	}
+	
+	public void destroySelf() {
+		Game.entities.remove(this);
+	}
+	
+	public void collidingBullet() {
+		for (Entity e : Game.bullets) {
+			if (Entity.isColliding(this, e)) {
+				this.life--;
+				Game.bullets.remove(e);
+				return;
 			}
 		}
 	}
