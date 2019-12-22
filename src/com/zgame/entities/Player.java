@@ -133,8 +133,6 @@ public class Player extends Entity{
 			}
 		}
 		
-		
-		
 		if (mouseShoot) {
 			this.mouseShoot = false;
 			if (this.hasGun) {
@@ -164,7 +162,7 @@ public class Player extends Entity{
 		}
 		
 		if (this.life <= 0) {
-			// gameover
+			Game.gameState = "GAME_OVER";
 		}
 		
 		Camera.x = Camera.clamp((this.getX() - (Game.WIDTH/2)), 0, ((World.WIDTH*16) - Game.WIDTH));

@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -47,12 +48,15 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	public static Spritesheet spritesheet;
 	
 	public static World world;
+	public static final String LEVEL_INICIAL = "level1.png";
 	
 	public static Player player;
 	
 	public static Random rand;
 	
 	public UI ui;
+	
+	public static String gameState = "NORMAL";
 	
 	public Game() {
 		this.addKeyListener(this);
@@ -70,7 +74,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		Game.spritesheet = new Spritesheet("/spritesheet.png");
 		Game.player = new Player(0,0,16,16,Game.spritesheet.getSprite(32, 0, 16, 16));
 		Game.entities.add(Game.player);
-		Game.world = new World("/level1.png");
+		Game.world = new World("/"+Game.LEVEL_INICIAL);
 	}
 	
 	public void initFrame() {
@@ -94,22 +98,26 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	}
 	
 	public void tick() {
-		for (int i = 0; i < Game.entities.size(); i++) {
-			Entity e = Game.entities.get(i);
-			e.tick();
-		}
-		for (int i = 0; i < Game.bullets.size(); i++) {
-			BulletShoot b = Game.bullets.get(i);
-			b.tick();
-		}
-		if (Game.enemies.size() == 0) {
-			this.currentLevel++;
-			if (this.currentLevel > Game.MAX_LEVEL) {
-				this.currentLevel = 1;
-			} else {
-				String newWorld = "level"+this.currentLevel+".png";
-				World.restartGame(newWorld);
+		if (Game.gameState == "NORMAL") {
+			for (int i = 0; i < Game.entities.size(); i++) {
+				Entity e = Game.entities.get(i);
+				e.tick();
 			}
+			for (int i = 0; i < Game.bullets.size(); i++) {
+				BulletShoot b = Game.bullets.get(i);
+				b.tick();
+			}
+			if (Game.enemies.size() == 0) {
+				this.currentLevel++;
+				if (this.currentLevel > Game.MAX_LEVEL) {
+					this.currentLevel = 1;
+				} else {
+					String newWorld = "level"+this.currentLevel+".png";
+					World.restartGame(newWorld);
+				}
+			}
+		} else if (Game.gameState == "GAME_OVER") {
+			System.out.println("PERDEU");
 		}
 	}
 	
@@ -123,7 +131,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		
 		// Limpando o fundo
 		g.setColor(new Color(0,0,0)); 
-		g.fillRect(0,0,WIDTH,HEIGHT);
+		g.fillRect(0,0,Game.WIDTH,Game.HEIGHT);
 		
 		// Renderização do jogo
 		// Graphics2D g2 = (Graphics2D)g;
@@ -139,10 +147,20 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		// Renderização do fFundo
 		g.dispose(); // metodo de otimização
 		g = bs.getDrawGraphics(); 
-		g.drawImage(this.image, 0, 0, WIDTH*SCALE, HEIGHT*SCALE, null);
+		g.drawImage(this.image, 0, 0, Game.WIDTH*Game.SCALE, Game.HEIGHT*Game.SCALE, null);
 		g.setFont(new Font("Arial",Font.BOLD,20));
 		g.setColor(Color.WHITE);
 		g.drawString("Munição: "+Game.player.ammo, 580, 30);
+		if (gameState == "GAME_OVER") {
+			Graphics2D g2 = (Graphics2D)g;
+			g2.setColor(new Color(0,0,0,100));
+			g2.fillRect(0, 0, Game.WIDTH*Game.SCALE, Game.HEIGHT*Game.SCALE);
+			g.setFont(new Font("Arial",Font.BOLD,60));
+			g.setColor(Color.WHITE);
+			g.drawString("Game Over", ((Game.WIDTH*Game.SCALE)/2)-155, ((Game.HEIGHT*Game.SCALE)/2)-5);
+			g.setFont(new Font("Arial",Font.BOLD,30));
+			g.drawString("Pressione >ENTER< para reiniciar", ((Game.WIDTH*Game.SCALE)/2)-235, ((Game.HEIGHT*Game.SCALE)/2)+30);
+		}
 		bs.show();
 	}
 	
@@ -216,6 +234,13 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		
 		if (code == KeyEvent.VK_SPACE) {
 			Game.player.keyShoot = true;
+		}
+		
+		if (Game.gameState == "GAME_OVER") {
+			if (code == KeyEvent.VK_ENTER) {
+				Game.gameState = "NORMAL";
+				World.restartGame(Game.LEVEL_INICIAL);
+			}
 		}
 	}
 
