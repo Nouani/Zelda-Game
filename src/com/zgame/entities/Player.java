@@ -164,14 +164,7 @@ public class Player extends Entity{
 		}
 		
 		if (this.life <= 0) {
-			Game.entities = new ArrayList<Entity>();
-			Game.enemies = new ArrayList<Enemy>();
-			Game.bullets = new ArrayList<BulletShoot>();
-			Game.spritesheet = new Spritesheet("/spritesheet.png");
-			Game.player = new Player(0,0,16,16,Game.spritesheet.getSprite(32, 0, 16, 16));
-			Game.entities.add(Game.player);
-			Game.world = new World("/map.png");
-			return;
+			// gameover
 		}
 		
 		Camera.x = Camera.clamp((this.getX() - (Game.WIDTH/2)), 0, ((World.WIDTH*16) - Game.WIDTH));

@@ -3,14 +3,18 @@ package com.zgame.world;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
 import com.zgame.entities.Bullet;
+import com.zgame.entities.BulletShoot;
 import com.zgame.entities.Enemy;
 import com.zgame.entities.Entity;
 import com.zgame.entities.Lifepack;
+import com.zgame.entities.Player;
 import com.zgame.entities.Weapon;
+import com.zgame.graficos.Spritesheet;
 import com.zgame.main.Game;
 
 public class World {
@@ -89,6 +93,17 @@ public class World {
 				 (World.tiles[x2 + (y2*World.WIDTH)] instanceof WallTile) ||
 				 (World.tiles[x3 + (y3*World.WIDTH)] instanceof WallTile) ||
 				 (World.tiles[x4 + (y4*World.WIDTH)] instanceof WallTile));
+	}
+	
+	public static void restartGame(String level) {
+		Game.entities = new ArrayList<Entity>();
+		Game.enemies = new ArrayList<Enemy>();
+		Game.bullets = new ArrayList<BulletShoot>();
+		Game.spritesheet = new Spritesheet("/spritesheet.png");
+		Game.player = new Player(0,0,16,16,Game.spritesheet.getSprite(32, 0, 16, 16));
+		Game.entities.add(Game.player);
+		Game.world = new World("/"+level);
+		return;
 	}
 	
 	public void render(Graphics g) {
