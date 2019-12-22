@@ -91,11 +91,16 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	}
 	
 	public void tick() {
-		for (Entity e : Game.entities) {
+		for (int i = 0; i < Game.entities.size(); i++) {
+			Entity e = Game.entities.get(i);
 			e.tick();
 		}
-		for (BulletShoot bullet : Game.bullets) {
-			bullet.tick();
+		for (int i = 0; i < Game.bullets.size(); i++) {
+			BulletShoot b = Game.bullets.get(i);
+			b.tick();
+		}
+		if (Game.enemies.size() == 0) {
+			System.out.println("proximo level");
 		}
 	}
 	
@@ -128,7 +133,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		g.drawImage(this.image, 0, 0, WIDTH*SCALE, HEIGHT*SCALE, null);
 		g.setFont(new Font("Arial",Font.BOLD,20));
 		g.setColor(Color.WHITE);
-		g.drawString("Munição: "+Game.player.ammo, 600, 20);
+		g.drawString("Munição: "+Game.player.ammo, 580, 30);
 		bs.show();
 	}
 	

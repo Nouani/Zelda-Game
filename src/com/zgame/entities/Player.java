@@ -186,7 +186,7 @@ public class Player extends Entity{
 				if(Entity.isColliding(this, atual))
 				{
 					this.hasGun = true;
-					//Game.entities.remove(atual);
+					Game.entities.remove(atual);
 				}
 			}
 		}
@@ -199,8 +199,8 @@ public class Player extends Entity{
 			if(atual instanceof Bullet) {
 				if(Entity.isColliding(this, atual))
 				{
-					this.ammo+=10;
-					//Game.entities.remove(atual);
+					this.ammo+=300;
+					Game.entities.remove(atual);
 				}
 			}
 		}
@@ -217,7 +217,7 @@ public class Player extends Entity{
 				
 					if(this.life > 100)
 						this.life = 100;
-					//Game.entities.remove(atual);
+					Game.entities.remove(atual);
 				}
 			}
 		}
