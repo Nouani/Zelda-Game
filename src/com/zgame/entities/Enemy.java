@@ -23,6 +23,9 @@ public class Enemy extends Entity{
 	private BufferedImage[] spritesEnemy;
 	
 	private int life = 10;
+	
+	private boolean isDamaged = false;
+	private int damageFrames = 0;
 
 	public Enemy(int x, int y, int widght, int height, BufferedImage sprite) {
 		super(x, y, widght, height, sprite);
@@ -68,6 +71,14 @@ public class Enemy extends Entity{
 			this.destroySelf();
 			return;
 		}
+		
+		if (this.isDamaged) {
+			this.damageFrames++;
+			if (this.damageFrames == 10) {
+				this.damageFrames = 0;
+				this.isDamaged = false;
+			}
+		}
 	}
 	
 	public void destroySelf() {
@@ -78,6 +89,7 @@ public class Enemy extends Entity{
 		for (Entity e : Game.bullets) {
 			if (Entity.isColliding(this, e)) {
 				this.life--;
+				this.isDamaged = true;
 				Game.bullets.remove(e);
 				return;
 			}
@@ -104,6 +116,10 @@ public class Enemy extends Entity{
 	}
 	
 	public void render(Graphics g) {
-		g.drawImage(this.spritesEnemy[this.index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+		if (!this.isDamaged) {
+			g.drawImage(this.spritesEnemy[this.index], this.getX() - Camera.x, this.getY() - Camera.y, null);	
+		} else {
+			g.drawImage(Entity.ENEMY_FEEDBACK, this.getX() - Camera.x, this.getY() - Camera.y, null);
+		}
 	}
 }
