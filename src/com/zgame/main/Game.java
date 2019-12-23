@@ -57,6 +57,9 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	public UI ui;
 	
 	public static String gameState = "NORMAL";
+	private boolean showMessageGameOver = true, changeEnter = true;
+	private int framesGameOver = 0, framesEnter = 0, framesRodando;
+	private String color = "WHITE";
 	
 	public Game() {
 		this.addKeyListener(this);
@@ -117,7 +120,25 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 				}
 			}
 		} else if (Game.gameState == "GAME_OVER") {
-			System.out.println("PERDEU");
+			this.framesRodando++;
+			
+			this.framesGameOver++;
+			if (this.framesGameOver == 55) {
+				this.framesGameOver = 0;
+				if (this.showMessageGameOver) 
+					this.showMessageGameOver = false;
+				else
+					this.showMessageGameOver = true;
+			}
+			
+			this.framesEnter++;
+			if (this.framesEnter == 25) {
+				this.framesEnter = 0;
+				if (this.changeEnter) 
+					this.changeEnter = false;
+				else
+					this.changeEnter = true;
+			}
 		}
 	}
 	
@@ -151,15 +172,32 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		g.setFont(new Font("Arial",Font.BOLD,20));
 		g.setColor(Color.WHITE);
 		g.drawString("Munição: "+Game.player.ammo, 580, 30);
+		
 		if (gameState == "GAME_OVER") {
 			Graphics2D g2 = (Graphics2D)g;
 			g2.setColor(new Color(0,0,0,100));
 			g2.fillRect(0, 0, Game.WIDTH*Game.SCALE, Game.HEIGHT*Game.SCALE);
+			
 			g.setFont(new Font("Arial",Font.BOLD,60));
 			g.setColor(Color.WHITE);
-			g.drawString("Game Over", ((Game.WIDTH*Game.SCALE)/2)-155, ((Game.HEIGHT*Game.SCALE)/2)-5);
-			g.setFont(new Font("Arial",Font.BOLD,30));
-			g.drawString("Pressione >ENTER< para reiniciar", ((Game.WIDTH*Game.SCALE)/2)-235, ((Game.HEIGHT*Game.SCALE)/2)+30);
+			
+			if (showMessageGameOver) {
+				g.drawString("Game Over", ((Game.WIDTH*Game.SCALE)/2)-155, ((Game.HEIGHT*Game.SCALE)/2)-5);
+			}
+			
+			if (this.framesRodando > 25) {
+				g.setFont(new Font("Arial",Font.BOLD,30));
+				g.drawString("Pressione                   para Reiniciar", ((Game.WIDTH*Game.SCALE)/2)-235, ((Game.HEIGHT*Game.SCALE)/2)+30);
+				if (this.changeEnter) {
+					if (color == "WHITE") {
+						g.setColor(Color.BLUE);
+					} else {
+						g.setColor(Color.WHITE);
+					}
+				}
+				
+				g.drawString(">ENTER<", ((Game.WIDTH*Game.SCALE)/2)-85, ((Game.HEIGHT*Game.SCALE)/2)+30);
+			}
 		}
 		bs.show();
 	}
