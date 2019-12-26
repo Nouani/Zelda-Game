@@ -162,6 +162,7 @@ public class Player extends Entity{
 		}
 		
 		if (this.life <= 0) {
+			this.life = 0;
 			Game.gameState = "GAME_OVER";
 		}
 		

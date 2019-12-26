@@ -60,6 +60,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	private boolean showMessageGameOver = true, changeEnter = true;
 	private int framesGameOver = 0, framesEnter = 0, framesRodando;
 	private String color = "WHITE";
+	private boolean restartGame = false;
 	
 	public Game() {
 		this.addKeyListener(this);
@@ -102,6 +103,8 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	
 	public void tick() {
 		if (Game.gameState == "NORMAL") {
+			this.restartGame = false;
+			
 			for (int i = 0; i < Game.entities.size(); i++) {
 				Entity e = Game.entities.get(i);
 				e.tick();
@@ -114,10 +117,9 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 				this.currentLevel++;
 				if (this.currentLevel > Game.MAX_LEVEL) {
 					this.currentLevel = 1;
-				} else {
-					String newWorld = "level"+this.currentLevel+".png";
-					World.restartGame(newWorld);
 				}
+				String newWorld = "level"+this.currentLevel+".png";
+				World.restartGame(newWorld);
 			}
 		} else if (Game.gameState == "GAME_OVER") {
 			this.framesRodando++;
@@ -138,6 +140,14 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 					this.changeEnter = false;
 				else
 					this.changeEnter = true;
+			}
+			
+			if (restartGame) {
+				this.currentLevel = 1;
+				this.restartGame = false;
+				Game.gameState = "NORMAL";
+				String newWorld = "level"+this.currentLevel+".png";
+				World.restartGame(newWorld);
 			}
 		}
 	}
@@ -253,6 +263,14 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		} else if (code == KeyEvent.VK_DOWN || code == KeyEvent.VK_S) {
 			Game.player.down = true;
 		}
+		
+		if (code == KeyEvent.VK_SPACE) {
+			Game.player.keyShoot = true;
+		}
+		
+		if (code == KeyEvent.VK_ENTER) {
+			this.restartGame = true;
+		}
 	}
 
 	@Override
@@ -271,14 +289,11 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		}
 		
 		if (code == KeyEvent.VK_SPACE) {
-			Game.player.keyShoot = true;
+			Game.player.keyShoot = false;
 		}
 		
-		if (Game.gameState == "GAME_OVER") {
-			if (code == KeyEvent.VK_ENTER) {
-				Game.gameState = "NORMAL";
-				World.restartGame(Game.LEVEL_INICIAL);
-			}
+		if (code == KeyEvent.VK_ENTER) {
+			this.restartGame = false;
 		}
 	}
 

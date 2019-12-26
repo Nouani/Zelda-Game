@@ -12,7 +12,7 @@ public class BulletShoot extends Entity{
 	private double speed = 4;
 	
 	private int currentLife = 0;
-	private static final int MAX_LIFE = 10;
+	private static final int MAX_LIFE = 25;
 
 	public BulletShoot(int x, int y, int width, int height, BufferedImage sprite, double dx, double dy) {
 		super(x, y, width, height, sprite);
@@ -25,7 +25,7 @@ public class BulletShoot extends Entity{
 		this.y += this.dy*this.speed;
 		this.currentLife++;
 		if (this.currentLife == BulletShoot.MAX_LIFE) {
-			//Game.bullets.remove(this);
+			Game.bullets.remove(this);
 			return;
 		}
 	}
