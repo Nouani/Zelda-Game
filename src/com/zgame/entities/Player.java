@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import com.zgame.graficos.Spritesheet;
 import com.zgame.main.Game;
+import com.zgame.main.Sound;
 import com.zgame.world.Camera;
 import com.zgame.world.World;
 
@@ -102,6 +103,7 @@ public class Player extends Entity{
 		this.checkCollisionGun();
 		
 		if (this.isDamaged) {
+			Sound.hurt.play();
 			this.damageFrames++;
 			if (this.damageFrames == 10) {
 				this.damageFrames = 0;

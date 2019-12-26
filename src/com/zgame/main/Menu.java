@@ -42,6 +42,8 @@ public class Menu {
 			} else if (this.options[this.currentOption] == "Sair") {
 				System.exit(1);
 			}
+		} else {
+			//Sound.music.loop();
 		}
 	}
 	
