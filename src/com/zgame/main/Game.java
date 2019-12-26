@@ -56,7 +56,9 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	
 	public UI ui;
 	
-	public static String gameState = "NORMAL";
+	public Menu menu;
+	
+	public static String gameState = "MENU";
 	private boolean showMessageGameOver = true, changeEnter = true;
 	private int framesGameOver = 0, framesEnter = 0, framesRodando;
 	private String color = "WHITE";
@@ -71,6 +73,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		// Inicializando objetos
 		Game.rand = new Random();
 		this.ui = new UI();
+		this.menu = new Menu();
 		this.image = new BufferedImage(Game.WIDTH,Game.HEIGHT,BufferedImage.TYPE_INT_ARGB);
 		Game.entities = new ArrayList<Entity>();
 		Game.enemies = new ArrayList<Enemy>();
@@ -82,7 +85,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	}
 	
 	public void initFrame() {
-		this.frame = new JFrame("Legends of Zelda");
+		this.frame = new JFrame("The Legend of Zelda");
 		this.frame.add(this);
 		this.frame.setResizable(false);
 		this.frame.pack();
@@ -149,6 +152,8 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 				String newWorld = "level"+this.currentLevel+".png";
 				World.restartGame(newWorld);
 			}
+		} else if (Game.gameState == "MENU") {
+			this.menu.tick();
 		}
 	}
 	
@@ -183,7 +188,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		g.setColor(Color.WHITE);
 		g.drawString("Munição: "+Game.player.ammo, 580, 30);
 		
-		if (gameState == "GAME_OVER") {
+		if (Game.gameState == "GAME_OVER") {
 			Graphics2D g2 = (Graphics2D)g;
 			g2.setColor(new Color(0,0,0,100));
 			g2.fillRect(0, 0, Game.WIDTH*Game.SCALE, Game.HEIGHT*Game.SCALE);
@@ -208,6 +213,8 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 				
 				g.drawString(">ENTER<", ((Game.WIDTH*Game.SCALE)/2)-85, ((Game.HEIGHT*Game.SCALE)/2)+30);
 			}
+		} else if (Game.gameState == "MENU") {
+			this.menu.render(g);
 		}
 		bs.show();
 	}
@@ -260,8 +267,16 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		
 		if (code == KeyEvent.VK_UP || code == KeyEvent.VK_W) {
 			Game.player.up = true;
+			
+			if (Game.gameState == "MENU") {
+				this.menu.up = true;
+			}
 		} else if (code == KeyEvent.VK_DOWN || code == KeyEvent.VK_S) {
 			Game.player.down = true;
+			
+			if (Game.gameState == "MENU") {
+				this.menu.down = true;
+			}
 		}
 		
 		if (code == KeyEvent.VK_SPACE) {
@@ -284,8 +299,16 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		
 		if (code == KeyEvent.VK_UP || code == KeyEvent.VK_W) {
 			Game.player.up = false;
+			
+			if (Game.gameState == "MENU") {
+				this.menu.up = false;
+			}
 		} else if (code == KeyEvent.VK_DOWN || code == KeyEvent.VK_S) {
 			Game.player.down = false;
+			
+			if (Game.gameState == "MENU") {
+				this.menu.down = false;
+			}
 		}
 		
 		if (code == KeyEvent.VK_SPACE) {
