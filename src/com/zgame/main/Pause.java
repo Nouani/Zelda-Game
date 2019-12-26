@@ -7,13 +7,14 @@ import java.awt.Graphics2D;
 
 import com.zgame.world.World;
 
-public class Menu {
-	private String[] options = {"Novo Jogo","Carregar","Sair"};
+public class Pause {
+	private String[] options = {"Sair para Menu","Voltar"};
 	
 	private int currentOption = 0;
 	private int maxOption = options.length - 1;
+
 	
-	public boolean up, down, enter;
+	public boolean up, down, enter, escape;
 	
 	public void tick() {
 		if (up) {
@@ -33,15 +34,13 @@ public class Menu {
 		}
 		if (enter) {
 			this.enter = false;
-			if(this.options[this.currentOption] == "Novo Jogo") {
+			if(this.options[this.currentOption] == "Voltar") {
+				this.escape = false;
 				Game.gameState = "NORMAL";
-				Game.currentLevel = 1;
-				World.restartGame(Game.LEVEL_INICIAL);
-			} else if (this.options[this.currentOption] == "Carregar") {
-				
-			} else if (this.options[this.currentOption] == "Sair") {
-				System.exit(1);
-			}
+			} else if (this.options[this.currentOption] == "Sair para Menu") {
+				this.escape = false;
+				Game.gameState = "MENU";
+			} 
 		}
 	}
 	
@@ -52,7 +51,7 @@ public class Menu {
 		g.fillRect(0, 0, Game.WIDTH*Game.SCALE, Game.HEIGHT*Game.SCALE);
 		g.setColor(Color.ORANGE);
 		g.setFont(new Font("arial",Font.BOLD,46));
-		g.drawString("The Legend of Zelda",((Game.WIDTH*Game.SCALE)/2)-220,((Game.HEIGHT*Game.SCALE)/2)-140);
+		g.drawString("Paused Game",((Game.WIDTH*Game.SCALE)/2)-155,((Game.HEIGHT*Game.SCALE)/2)-140);
 		
 		// Opcoes de menu
 		//g.setColor(Color.ORANGE);
@@ -73,17 +72,5 @@ public class Menu {
 				g.drawString(">", ((Game.WIDTH*Game.SCALE)/2)-offsetX-20, ((Game.HEIGHT*Game.SCALE)/2)+offsetY);
 			}
 		}
-		/*g.drawString("Novo Jogo", ((Game.WIDTH*Game.SCALE)/2)-72, ((Game.HEIGHT*Game.SCALE)/2)-40);
-		g.drawString("Carregar Jogo", ((Game.WIDTH*Game.SCALE)/2)-100, ((Game.HEIGHT*Game.SCALE)/2)+10);
-		g.drawString("Sair", ((Game.WIDTH*Game.SCALE)/2)-30, ((Game.HEIGHT*Game.SCALE)/2)+60);*/
-		
-		
-		/*if (options[this.currentOption] == "Novo Jogo") {
-			g.drawString(">", ((Game.WIDTH*Game.SCALE)/2)-100, ((Game.HEIGHT*Game.SCALE)/2)-40);
-		} else if (options[this.currentOption] == "Carregar") {
-			g.drawString(">", ((Game.WIDTH*Game.SCALE)/2)-85, ((Game.HEIGHT*Game.SCALE)/2)+8);
-		} else if (options[this.currentOption] == "Sair") {
-			g.drawString(">", ((Game.WIDTH*Game.SCALE)/2)-50, ((Game.HEIGHT*Game.SCALE)/2)+57);
-		}*/
 	}
 }
