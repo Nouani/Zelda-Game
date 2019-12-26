@@ -11,7 +11,7 @@ public class Menu {
 	public int currentOption = 0;
 	public int maxOption = options.length - 1;
 	
-	public boolean up, down;
+	public boolean up, down, enter;
 	
 	public void tick() {
 		if (up) {
@@ -29,20 +29,30 @@ public class Menu {
 				this.currentOption = 0;
 			}
 		}
+		if (enter) {
+			this.enter = false;
+			if(this.options[this.currentOption] == "Novo Jogo") {
+				Game.gameState = "NORMAL";
+			} else if (this.options[this.currentOption] == "Carregar") {
+				
+			} else if (this.options[this.currentOption] == "Sair") {
+				System.exit(1);
+			}
+		}
 	}
 	
 	public void render(Graphics g) {
-		/*Graphics2D g2 = (Graphics2D)g;
-		g.setColor(new Color(0,0,0,100));*/
-		g.setColor(Color.BLACK);
+		Graphics2D g2 = (Graphics2D)g;
+		g.setColor(new Color(0,0,0,100));
+		//g.setColor(Color.BLACK);
 		g.fillRect(0, 0, Game.WIDTH*Game.SCALE, Game.HEIGHT*Game.SCALE);
-		g.setColor(Color.GREEN);
+		g.setColor(Color.ORANGE);
 		g.setFont(new Font("arial",Font.BOLD,46));
 		g.drawString("The Legend of Zelda",((Game.WIDTH*Game.SCALE)/2)-220,((Game.HEIGHT*Game.SCALE)/2)-140);
 		
 		// Opcoes de menu
-		g.setColor(Color.ORANGE);
-		g.fillRect(0, ((Game.HEIGHT*Game.SCALE)/2)-95, Game.WIDTH*Game.SCALE, 200);
+		//g.setColor(Color.ORANGE);
+		//g.fillRect(0, ((Game.HEIGHT*Game.SCALE)/2)-95, Game.WIDTH*Game.SCALE, 200);
 		g.setColor(Color.WHITE);
 		g.setFont(new Font("arial",Font.BOLD,30));
 		for (int i = 0; i < this.options.length; i++) {

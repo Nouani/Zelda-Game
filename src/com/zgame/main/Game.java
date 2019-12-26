@@ -185,8 +185,10 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		g = bs.getDrawGraphics(); 
 		g.drawImage(this.image, 0, 0, Game.WIDTH*Game.SCALE, Game.HEIGHT*Game.SCALE, null);
 		g.setFont(new Font("Arial",Font.BOLD,20));
-		g.setColor(Color.WHITE);
-		g.drawString("Munição: "+Game.player.ammo, 580, 30);
+		if (Game.gameState == "NORMAL") {
+			g.setColor(Color.WHITE);
+			g.drawString("Munição: "+Game.player.ammo, 580, 30);
+		}
 		
 		if (Game.gameState == "GAME_OVER") {
 			Graphics2D g2 = (Graphics2D)g;
@@ -285,6 +287,10 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		
 		if (code == KeyEvent.VK_ENTER) {
 			this.restartGame = true;
+			
+			if (Game.gameState == "MENU") {
+				this.menu.enter = true;
+			}
 		}
 	}
 
