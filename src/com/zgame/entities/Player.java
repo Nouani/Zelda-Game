@@ -1,5 +1,6 @@
 package com.zgame.entities;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -43,6 +44,12 @@ public class Player extends Entity{
 				   mouseShoot = false;
 	public int mx, my;
 	
+	public boolean jump = false;
+	private boolean isJumping = false,
+					jumpUp = false, jumpDown = false;
+	private int jumpFrames = 20, jumpCurrent = 0,
+				jumpSpeed = 2;
+	
 	private String ultimaDirecao = "frente";
 
 	public Player(int x, int y, int widght, int height, BufferedImage sprite) {
@@ -65,6 +72,32 @@ public class Player extends Entity{
 	
 	public void tick() { 
 		moved = false; // ainda não esta em movimento
+		
+		if (this.jump) {
+			if (!this.isJumping) {
+				this.jump = false;
+				this.isJumping = true;
+				this.jumpUp = true;
+			}
+		}
+		if (this.isJumping) {
+				if (this.jumpUp) {
+					this.jumpCurrent += this.jumpSpeed;
+					if (this.jumpCurrent >= this.jumpFrames) {
+						this.jumpUp = false;
+						this.jumpDown = true;
+					}
+				} else if (this.jumpDown) {
+					this.jumpCurrent -= this.jumpSpeed;
+					if (this.jumpCurrent <= 0) {
+						this.isJumping = false;
+						this.jumpDown = false;
+						this.jumpUp = false;
+					}
+				}
+				this.z = this.jumpCurrent;
+		}
+		
 		if (right && World.isFree((int)(this.x + this.speed), this.getY())) { // se apertou tecla para direita
 			moved = true; // está em movimento
 			dir = rightDir; // codigo da tecla atual em movimento
@@ -220,15 +253,15 @@ public class Player extends Entity{
 	public void render(Graphics g) {
 		if (!this.isDamaged) {
 			if (dir == rightDir) { // verifica se o codigo é igual o de tecla para direita
-				g.drawImage(this.rightPlayer[this.index], this.getX() - Camera.x, this.getY() - Camera.y, null); // atualiza a posição do player
+				g.drawImage(this.rightPlayer[this.index], this.getX() - Camera.x, this.getY() - Camera.y - this.getZ(), null); // atualiza a posição do player
 				if (this.hasGun) {
-					g.drawImage(Entity.GUN_RIGHT, this.getX() + 2 - Camera.x, this.getY() + 1 - Camera.y, null);
+					g.drawImage(Entity.GUN_RIGHT, this.getX() + 2 - Camera.x, this.getY() + 1 - Camera.y - this.getZ(), null);
 					this.ultimaDirecao = "right";
 				}
 			} else if (dir == leftDir) {
-				g.drawImage(this.leftPlayer[this.index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+				g.drawImage(this.leftPlayer[this.index], this.getX() - Camera.x, this.getY() - Camera.y - this.getZ(), null);
 				if (this.hasGun) {
-					g.drawImage(Entity.GUN_LEFT, this.getX() - 2 - Camera.x, this.getY() + 2 - Camera.y, null);
+					g.drawImage(Entity.GUN_LEFT, this.getX() - 2 - Camera.x, this.getY() + 2 - Camera.y - this.getZ(), null);
 					this.ultimaDirecao = "left";
 				}
 			} else if (dir == upDir) { 
@@ -241,11 +274,11 @@ public class Player extends Entity{
 						gun = Entity.GUN_RIGHT;
 						this.ultimaDirecao = "upRight";
 					}
-					g.drawImage(gun, this.getX() - Camera.x, this.getY() + 1 - Camera.y, null);
+					g.drawImage(gun, this.getX() - Camera.x, this.getY() + 1 - Camera.y - this.getZ(), null);
 				}
-				g.drawImage(this.upPlayer[this.index], this.getX() - Camera.x, this.getY() - Camera.y, null); 
+				g.drawImage(this.upPlayer[this.index], this.getX() - Camera.x, this.getY() - Camera.y - this.getZ(), null); 
 			} else if (dir == downDir) { 
-				g.drawImage(this.downPlayer[this.index], this.getX() - Camera.x, this.getY() - Camera.y, null);
+				g.drawImage(this.downPlayer[this.index], this.getX() - Camera.x, this.getY() - Camera.y - this.getZ(), null);
 				if (this.hasGun) {
 					BufferedImage gun = null;
 					if (this.ultimaDirecao == "upRight" || this.ultimaDirecao == "right" || this.ultimaDirecao == "downLeft") {
@@ -255,11 +288,11 @@ public class Player extends Entity{
 						gun = Entity.GUN_RIGHT;
 						this.ultimaDirecao = "downRight";
 					} 
-					g.drawImage(gun, this.getX() - Camera.x, this.getY() + 1 - Camera.y, null);
+					g.drawImage(gun, this.getX() - Camera.x, this.getY() + 1 - Camera.y - this.getZ(), null);
 				}
 			}
 		} else {
-			g.drawImage(this.playerDamage, this.getX() - Camera.x, this.getY() - Camera.y, null);
+			g.drawImage(this.playerDamage, this.getX() - Camera.x, this.getY() - Camera.y - this.getZ(), null);
 		}
 	}
 }
