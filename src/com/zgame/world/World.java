@@ -75,7 +75,7 @@ public class World {
 		}
 	}
 	
-	public static boolean isFree(int xNext, int yNext) {
+	public static boolean isFree(int xNext, int yNext, int zPlayer) {
 		// converte a posicao e pega o pixel do proximo x e y
 		int x1 = xNext / World.TILE_SIZE;
 		int y1 = yNext / World.TILE_SIZE;
@@ -89,10 +89,14 @@ public class World {
 		int x4 = (xNext + World.TILE_SIZE - 1) / World.TILE_SIZE;
 		int y4 = (yNext + World.TILE_SIZE - 1) / World.TILE_SIZE;
 		
-		return !((World.tiles[x1 + (y1*World.WIDTH)] instanceof WallTile) ||
+		if(!((World.tiles[x1 + (y1*World.WIDTH)] instanceof WallTile) ||
 				 (World.tiles[x2 + (y2*World.WIDTH)] instanceof WallTile) ||
 				 (World.tiles[x3 + (y3*World.WIDTH)] instanceof WallTile) ||
-				 (World.tiles[x4 + (y4*World.WIDTH)] instanceof WallTile));
+				 (World.tiles[x4 + (y4*World.WIDTH)] instanceof WallTile)))
+			return true;
+		if (zPlayer > 0)
+			return true;
+		return false;
 	}
 	
 	public static void restartGame(String level) {

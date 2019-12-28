@@ -47,7 +47,7 @@ public class Player extends Entity{
 	public boolean jump = false;
 	private boolean isJumping = false,
 					jumpUp = false, jumpDown = false;
-	private int jumpFrames = 20, jumpCurrent = 0,
+	private int jumpFrames = 25, jumpCurrent = 0,
 				jumpSpeed = 2;
 	
 	private String ultimaDirecao = "frente";
@@ -98,23 +98,23 @@ public class Player extends Entity{
 				this.z = this.jumpCurrent;
 		}
 		
-		if (right && World.isFree((int)(this.x + this.speed), this.getY())) { // se apertou tecla para direita
+		if (right && World.isFree((int)(this.x + this.speed), this.getY(), this.getZ())) { // se apertou tecla para direita
 			moved = true; // está em movimento
 			dir = rightDir; // codigo da tecla atual em movimento
 			this.x += this.speed; // movimenta o player
 		} 
-		else if (left && World.isFree((int)(this.x - this.speed), this.getY())) { // se apertou tecla para esquerda
+		else if (left && World.isFree((int)(this.x - this.speed), this.getY(), this.getZ())) { // se apertou tecla para esquerda
 			moved = true; // está em movimento
 			dir = leftDir; // codigo da tecla atual em movimento
 			this.x -= this.speed; // movimenta o player
 		}
 		
-		if (up && World.isFree(this.getX(), (int)(this.y - this.speed))) { // se apertou tecla para cima
+		if (up && World.isFree(this.getX(), (int)(this.y - this.speed), this.getZ())) { // se apertou tecla para cima
 			moved = true; // está em movimento
 			dir = upDir; // codigo da tecla atual em movimento
 			this.y -= this.speed; // movimenta o player
 		} 
-		else if (down && World.isFree(this.getX(), (int)(this.y + this.speed))) { // se apertou tecla para baixo
+		else if (down && World.isFree(this.getX(), (int)(this.y + this.speed), this.getZ())) { // se apertou tecla para baixo
 			moved = true; // está em movimento
 			dir = downDir; // codigo da tecla atual em movimento
 			this.y += this.speed; // movimenta o player
