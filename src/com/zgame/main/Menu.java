@@ -4,6 +4,11 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 
 import com.zgame.world.World;
 
@@ -36,15 +41,119 @@ public class Menu {
 			if(this.options[this.currentOption] == "Novo Jogo") {
 				Game.gameState = "NORMAL";
 				Game.currentLevel = 1;
+				File file = new File("save.txt");
+				file.delete();
 				World.restartGame(Game.LEVEL_INICIAL);
 			} else if (this.options[this.currentOption] == "Carregar") {
-				
+				File file = new File("save.txt");
+				if (file.exists()) {
+					String saver = Menu.loadGame(10);
+					Menu.applySave(saver);
+				}
 			} else if (this.options[this.currentOption] == "Sair") {
+				int posse = -1;
+				if (Game.player.hasGun)
+					posse = 1;
+				else
+					posse = 0;
+				
+				String[] options = {"level","life","playerX","playerY","munição","gun"};
+				int[] options2 = {Game.currentLevel, (int)Game.player.life, Game.player.getX(), Game.player.getY(), Game.player.ammo, posse};
+				Menu.saveGame(options, options2, 10);
+				System.out.println("JOGO SALVO!");
 				System.exit(1);
 			}
 		} else {
 			//Sound.music.loop();
 		}
+	}
+	
+	public static void applySave(String str) {
+		String[] spl = str.split("/");
+		for (int i = 0; i < spl.length; i++) {
+			String[] spl2 = spl[i].split(":");
+			System.out.println(spl2[1]);
+			switch(spl2[0]) {
+			case "level":
+				World.restartGame("level"+spl2[1]+".png");
+				Game.gameState = "NORMAL";
+				break;
+			case "life":
+				Game.player.life = Double.parseDouble(spl2[1]);
+				break;
+			case "playerX":
+				Game.player.setX(Integer.parseInt(spl2[1]));
+				break;
+			case "playerY":
+				Game.player.setY(Integer.parseInt(spl2[1]));
+				break;
+			case "munição":
+				Game.player.ammo = Integer.parseInt(spl2[1]);
+				break;
+			case "gun":
+				if (Integer.parseInt(spl2[1]) > 0)
+					Game.player.hasGun = true;
+			}
+
+		}
+	}
+	
+	public static String loadGame(int encode) {
+		String line = "";
+		File file = new File("save.txt");
+		if (file.exists()) {
+			try {
+				String singleLine = null;
+				BufferedReader reader = new BufferedReader(new FileReader("save.txt"));
+				try {
+					while((singleLine = reader.readLine()) != null) {
+						String[] trans = singleLine.split(":");
+						char[] val = trans[1].toCharArray();
+						trans[1] = "";
+						for (int i = 0; i < val.length; i++) {
+							val[i] -= encode;
+							trans[1] += val[i];
+						}
+						line+=trans[0];
+						line+=":";
+						line+=trans[1];
+						line+="/";
+					}
+				}
+				catch(Exception e) {}
+			}
+			catch(Exception e) {}
+		}
+		return line;
+	}
+	
+	public static void saveGame(String[] val1, int[] val2, int encode) {
+		 BufferedWriter write = null;
+		 try {
+			 write = new BufferedWriter(new FileWriter("save.txt"));
+		 }
+		 catch(Exception e) {}
+		 
+		 for (int i = 0; i < val1.length; i++) {
+			 String current = val1[i];
+			 current += ":";
+			 char[] value = Integer.toString(val2[i]).toCharArray();
+			 for (int k = 0; k < value.length; k++) {
+				 value[k]+=encode;
+				 current+=value[k];
+			 }
+			 try {
+				 write.write(current);
+				 if (i < val1.length - 1)
+					 write.newLine();
+			 }
+			 catch(Exception e) {}
+		 }
+		 try {
+			 write.flush();
+			 write.close();
+		 }
+		 catch(Exception e) {}
 	}
 	
 	public void render(Graphics g) {

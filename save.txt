@@ -1,0 +1,6 @@
+level:;
+life:C@
+playerX:;>?
+playerY:<
+munição::
+gun::

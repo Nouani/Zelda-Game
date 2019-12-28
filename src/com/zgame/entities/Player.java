@@ -35,7 +35,7 @@ public class Player extends Entity{
 
 	public int ammo = 0;
 	
-	private boolean hasGun = false;
+	public boolean hasGun = false;
 	
 	public boolean isDamaged = false;
 	private int damageFrames = 0;
