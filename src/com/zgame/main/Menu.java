@@ -57,8 +57,8 @@ public class Menu {
 				else
 					posse = 0;
 				
-				String[] options = {"level","life","playerX","playerY","munição","gun"};
-				int[] options2 = {Game.currentLevel, (int)Game.player.life, Game.player.getX(), Game.player.getY(), Game.player.ammo, posse};
+				String[] options = {"level","life","gun"};
+				int[] options2 = {Game.currentLevel, (int)Game.player.life, Game.player.ammo, posse};
 				Menu.saveGame(options, options2, 10);
 				System.out.println("JOGO SALVO!");
 				System.exit(1);
@@ -66,13 +66,12 @@ public class Menu {
 		} else {
 			//Sound.music.loop();
 		}
-	}
+	} 
 	
 	public static void applySave(String str) {
 		String[] spl = str.split("/");
 		for (int i = 0; i < spl.length; i++) {
 			String[] spl2 = spl[i].split(":");
-			System.out.println(spl2[1]);
 			switch(spl2[0]) {
 			case "level":
 				World.restartGame("level"+spl2[1]+".png");
@@ -80,15 +79,6 @@ public class Menu {
 				break;
 			case "life":
 				Game.player.life = Double.parseDouble(spl2[1]);
-				break;
-			case "playerX":
-				Game.player.setX(Integer.parseInt(spl2[1]));
-				break;
-			case "playerY":
-				Game.player.setY(Integer.parseInt(spl2[1]));
-				break;
-			case "munição":
-				Game.player.ammo = Integer.parseInt(spl2[1]);
 				break;
 			case "gun":
 				if (Integer.parseInt(spl2[1]) > 0)

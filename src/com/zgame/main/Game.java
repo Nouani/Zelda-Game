@@ -223,7 +223,6 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		} else if (Game.gameState == "MENU") {
 			this.menu.render(g);
 		} else if (Game.gameState == "PAUSE") {
-			System.out.println("dsaads");
 			this.pause.render(g);
 		}
 		bs.show();
