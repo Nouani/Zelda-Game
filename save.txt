@@ -1,3 +1,0 @@
-level:;
-life:CB
-gun:;?@

@@ -81,7 +81,6 @@ public class Entity {
 	}
 	
 	public void tick() {
-		
 	}
 	
 	public static boolean isColliding(Entity e1, Entity e2) {
@@ -89,6 +88,10 @@ public class Entity {
 		Rectangle rectE2 = new Rectangle(e2.getX() + e2.maskX, e2.getY() - e2.getZ() + e2.maskY, e2.maskW, e2.maskH);
 		
 		return rectE1.intersects(rectE2);
+	}
+	
+	public double calculateDistance(int x1, int y1, int x2, int y2) {
+		return Math.sqrt(((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)));
 	}
 	
 	public void render(Graphics g) {

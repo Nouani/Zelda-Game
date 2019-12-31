@@ -4,14 +4,21 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
+import java.awt.image.Raster;
+import java.awt.image.RenderedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -27,7 +34,7 @@ import com.zgame.graficos.UI;
 import com.zgame.world.Camera;
 import com.zgame.world.World;
 
-public class Game extends Canvas implements Runnable, KeyListener, MouseListener{
+public class Game extends Canvas implements Runnable, KeyListener, MouseListener, MouseMotionListener{
 	private JFrame frame;
 	
 	public static final int WIDTH = 240;
@@ -60,15 +67,24 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	
 	public Pause pause;
 	
+	public InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream("pixelfont.ttf");
+	public Font newFont;
+	
 	public static String gameState = "MENU";
 	private boolean showMessageGameOver = true, changeEnter = true;
 	private int framesGameOver = 0, framesEnter = 0, framesRodando;
 	private String color = "WHITE";
 	private boolean restartGame = false;
 	
+	private int mx, my;
+	
+	/*private int[] pixels;
+	int xx, yy;*/
+	
 	public Game() {
 		this.addKeyListener(this);
 		this.addMouseListener(this);
+		this.addMouseMotionListener(this);
 		this.setPreferredSize(new Dimension(Game.WIDTH*Game.SCALE,Game.HEIGHT*Game.SCALE));
 		initFrame();
 		
@@ -78,6 +94,7 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		this.menu = new Menu();
 		this.pause = new Pause();
 		this.image = new BufferedImage(Game.WIDTH,Game.HEIGHT,BufferedImage.TYPE_INT_ARGB);
+		//this.pixels = ((DataBufferInt)this.image.getRaster().getDataBuffer()).getData();
 		Game.entities = new ArrayList<Entity>();
 		Game.enemies = new ArrayList<Enemy>();
 		Game.bullets = new ArrayList<BulletShoot>();
@@ -85,6 +102,12 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		Game.player = new Player(0,0,16,16,Game.spritesheet.getSprite(32, 0, 16, 16));
 		Game.entities.add(Game.player);
 		Game.world = new World("/"+Game.LEVEL_INICIAL);
+		
+		try {
+			this.newFont = Font.createFont(Font.TRUETYPE_FONT, this.stream).deriveFont(40F);
+		} catch (Exception e) {
+			e.printStackTrace(); 
+		} 
 	}
 	
 	public void initFrame() {
@@ -187,11 +210,13 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 		
 		// Renderização do fFundo
 		g.dispose(); // metodo de otimização
-		g = bs.getDrawGraphics(); 
+		g = bs.getDrawGraphics();
+		//this.drawRectangle(this.xx, this.yy);
 		g.drawImage(this.image, 0, 0, Game.WIDTH*Game.SCALE, Game.HEIGHT*Game.SCALE, null);
 		g.setFont(new Font("Arial",Font.BOLD,20));
 		if (Game.gameState == "NORMAL") {
 			g.setColor(Color.WHITE);
+			g.setFont(this.newFont);
 			g.drawString("Munição: "+Game.player.ammo, 580, 30);
 		}
 		
@@ -222,11 +247,35 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 			}
 		} else if (Game.gameState == "MENU") {
 			this.menu.render(g);
+			
+			/*
+			Graphics2D g2 = (Graphics2D)g;
+			double angleMouse = Math.atan2(60+25 - this.my, 60+25 - this.mx);
+			g2.rotate(angleMouse, 60+25,60+25);
+			g.setColor(Color.red);
+			g.fillRect(60, 60, 50, 50);
+			*/
 		} else if (Game.gameState == "PAUSE") {
 			this.pause.render(g);
 		}
+		
 		bs.show();
 	}
+	
+	/*
+	public void drawRectangle(int xOff, int yOff) {
+		for (int xx = 0; xx < 32; xx++) {
+			for (int yy = 0; yy < 32; yy++) {
+				int x = xx + xOff;
+				int y = yy + yOff;
+				if (x < 0 || y < 0 || x >= Game.WIDTH || y >= Game.HEIGHT)
+					continue;
+				else
+					this.pixels[x + (y * Game.WIDTH)] = 0xFFFF0000;
+			}
+		}
+	}
+	*/
 	
 	public static void main(String[] args) {
 		Game game = new Game();
@@ -396,6 +445,18 @@ public class Game extends Canvas implements Runnable, KeyListener, MouseListener
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		this.mx = e.getX();
+		this.my = e.getY();
 	}
 
 }

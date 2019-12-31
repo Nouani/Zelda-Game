@@ -37,47 +37,51 @@ public class Enemy extends Entity{
 	}
 	
 	public void tick() {
-		if (Game.rand.nextInt(100) < 70) {
-			if (!this.isCollidingWithPlayer()) {
-				if (this.x < Game.player.getX() && World.isFree((int)(this.x + this.speed), this.getY(), this.getZ()) && !this.isColliding((int)(this.x + this.speed), this.getY())) {
-					this.x += this.speed;
-				} else if (this.x > Game.player.getX() && World.isFree((int)(this.x - this.speed), this.getY(), this.getZ()) && !this.isColliding((int)(this.x - this.speed), this.getY())) {
-					this.x -= this.speed;
-				}		
-				if (this.y < Game.player.getY() && World.isFree(this.getX(), (int)(this.y + this.speed), this.getZ()) && !this.isColliding(this.getX(), (int)(this.y + this.speed))) {
-					this.y += this.speed;
-				} else if (this.y > Game.player.getY() && World.isFree(this.getX(), (int)(this.y - this.speed), this.getZ()) && !this.isColliding(this.getX(), (int)(this.y - this.speed))) {
-					this.y -= this.speed;
-				}
-			} else {
-				if (Game.rand.nextInt(100) < 10) {
-					Game.player.life -= Game.rand.nextInt(5);
-					Game.player.isDamaged = true;
+		if ((this.calculateDistance(this.getX(), this.getY(), Game.player.getX(), Game.player.getY())) < 100) {
+			if (Game.rand.nextInt(100) < 70) {
+				if (!this.isCollidingWithPlayer()) {
+					if (this.x < Game.player.getX() && World.isFree((int)(this.x + this.speed), this.getY(), this.getZ()) && !this.isColliding((int)(this.x + this.speed), this.getY())) {
+						this.x += this.speed;
+					} else if (this.x > Game.player.getX() && World.isFree((int)(this.x - this.speed), this.getY(), this.getZ()) && !this.isColliding((int)(this.x - this.speed), this.getY())) {
+						this.x -= this.speed;
+					}		
+					if (this.y < Game.player.getY() && World.isFree(this.getX(), (int)(this.y + this.speed), this.getZ()) && !this.isColliding(this.getX(), (int)(this.y + this.speed))) {
+						this.y += this.speed;
+					} else if (this.y > Game.player.getY() && World.isFree(this.getX(), (int)(this.y - this.speed), this.getZ()) && !this.isColliding(this.getX(), (int)(this.y - this.speed))) {
+						this.y -= this.speed;
+					}
+				} else {
+					if (Game.rand.nextInt(100) < 10) {
+						Game.player.life -= Game.rand.nextInt(5);
+						Game.player.isDamaged = true;
+					}
 				}
 			}
-		}
 
-		this.frames++; // soma quantidade de vezes que esta em movimento
-		if (this.frames == this.maxFrames) { // se a quantidade de vezes for igual a maxima para troca de sprite
-			this.frames = 0; // zera
-			this.index++; // soma indice do vetor de sprite para tal lado
-			if (this.index > Enemy.MAX_INDEX) { // se indice é maior que a quantidade total de sprites para animacao
-				index = 0; // volta para primeira sprite
+			this.frames++; // soma quantidade de vezes que esta em movimento
+			if (this.frames == this.maxFrames) { // se a quantidade de vezes for igual a maxima para troca de sprite
+				this.frames = 0; // zera
+				this.index++; // soma indice do vetor de sprite para tal lado
+				if (this.index > Enemy.MAX_INDEX) { // se indice é maior que a quantidade total de sprites para animacao
+					index = 0; // volta para primeira sprite
+				}
 			}
-		}
-		
-		this.collidingBullet();
-		if (this.life == 0) {
-			this.destroySelf();
-			return;
-		}
-		
-		if (this.isDamaged) {
-			this.damageFrames++;
-			if (this.damageFrames == 10) {
-				this.damageFrames = 0;
-				this.isDamaged = false;
+			
+			this.collidingBullet();
+			if (this.life == 0) {
+				this.destroySelf();
+				return;
 			}
+			
+			if (this.isDamaged) {
+				this.damageFrames++;
+				if (this.damageFrames == 10) {
+					this.damageFrames = 0;
+					this.isDamaged = false;
+				}
+			}	
+		} else {
+			
 		}
 	}
 	
